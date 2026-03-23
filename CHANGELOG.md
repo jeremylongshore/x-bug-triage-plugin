@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.1.2] - 2026-03-23
+
+- chore(release): clean up CHANGELOG and add .gist-id (f6256cb)
+
+
 All notable changes to x-bug-triage-plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
