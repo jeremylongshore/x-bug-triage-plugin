@@ -1,0 +1,54 @@
+name: PR Quality Gate
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Type check
+        run: bun run typecheck
+
+      - name: Run tests
+        run: bun test 2>&1 | tee /tmp/test-output.txt
+
+      - name: Verify minimum test count
+        run: |
+          PASS_COUNT=$(grep -oP '\d+ pass' /tmp/test-output.txt | grep -oP '\d+')
+          FAIL_COUNT=$(grep -oP '\d+ fail' /tmp/test-output.txt | grep -oP '\d+')
+          echo "Passed: $PASS_COUNT | Failed: $FAIL_COUNT"
+          if [ "$FAIL_COUNT" -gt 0 ]; then
+            echo "::error::$FAIL_COUNT tests failed"
+            exit 1
+          fi
+          if [ "$PASS_COUNT" -lt 200 ]; then
+            echo "::warning::Test count ($PASS_COUNT) below 200 minimum — watch for test deletion"
+          fi
+
+      - name: Validate JSON configs
+        run: |
+          for f in .claude-plugin/plugin.json .mcp.json hooks/hooks.json config/*.json; do
+            python3 -c "import json; json.load(open('$f'))" || exit 1
+          done
+
+      - name: Check for PII in test fixtures
+        run: |
+          set -e
+          # Scan test fixtures for accidental real PII
+          if grep -rn '[a-zA-Z0-9._%+-]\+@[a-zA-Z0-9.-]\+\.[a-zA-Z]\{2,\}' tests/fixtures/ --include='*.json' | grep -v 'REDACTED\|example\.com\|test\.com'; then
+            echo "::error::Possible real email address found in test fixtures"
+            exit 1
+          fi
+          echo "No PII detected in fixtures."
