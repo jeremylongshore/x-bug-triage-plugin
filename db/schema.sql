@@ -1,0 +1,4 @@
+-- X Bug Triage Plugin — SQLite Schema
+-- Full DDL implemented in EPIC 02.
+-- 8 tables: candidates, clusters, cluster_posts, overrides,
+--           suppression_rules, issue_links, triage_runs, audit_log

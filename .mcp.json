@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "x-intake": {
+      "command": "bun",
+      "args": ["run", "--cwd", "${CLAUDE_PLUGIN_ROOT}/mcp/x-intake-server", "--silent", "start"]
+    },
+    "repo-analysis": {
+      "command": "bun",
+      "args": ["run", "--cwd", "${CLAUDE_PLUGIN_ROOT}/mcp/repo-analysis-server", "--silent", "start"]
+    },
+    "internal-routing": {
+      "command": "bun",
+      "args": ["run", "--cwd", "${CLAUDE_PLUGIN_ROOT}/mcp/internal-routing-server", "--silent", "start"]
+    },
+    "issue-draft": {
+      "command": "bun",
+      "args": ["run", "--cwd", "${CLAUDE_PLUGIN_ROOT}/mcp/issue-draft-server", "--silent", "start"]
+    },
+    "slack-notification": {
+      "command": "bun",
+      "args": ["run", "--cwd", "${CLAUDE_PLUGIN_ROOT}/mcp/slack-notification-server", "--silent", "start"]
+    }
+  }
+}

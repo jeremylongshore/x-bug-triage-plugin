@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# SQLite database
+data/triage.db
+data/triage.db-wal
+data/triage.db-shm
+
+# Data artifacts (generated at runtime)
+data/reports/*.json
+data/audit/*.json
+
+# Environment
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Beads local state
+.beads/
+
+# Bun
+bun.lockb

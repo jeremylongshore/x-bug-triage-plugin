@@ -1,0 +1,9 @@
+# Exclude runtime data
+triage.db
+triage.db-wal
+triage.db-shm
+reports/*.json
+audit/*.json
+
+# Keep directory structure
+!.gitkeep
