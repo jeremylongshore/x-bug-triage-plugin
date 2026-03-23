@@ -1,0 +1,37 @@
+{
+  "data": [
+    {
+      "id": "1234567892",
+      "text": "Anyone else getting Error 500 on the TestProduct chat? This is ridiculous, been broken for hours.",
+      "author_id": "444555666",
+      "conversation_id": "1234567892",
+      "created_at": "2026-03-23T11:00:00.000Z",
+      "public_metrics": {
+        "like_count": 42,
+        "reply_count": 15,
+        "retweet_count": 8,
+        "quote_count": 3
+      },
+      "lang": "en"
+    },
+    {
+      "id": "1234567890",
+      "text": "@TestProduct my messages keep disappearing in the chat. Getting Error 500 every time I try to send.",
+      "author_id": "987654321",
+      "conversation_id": "1234567890",
+      "created_at": "2026-03-23T10:00:00.000Z",
+      "public_metrics": {
+        "like_count": 15,
+        "reply_count": 3,
+        "retweet_count": 2,
+        "quote_count": 1
+      },
+      "lang": "en"
+    }
+  ],
+  "meta": {
+    "result_count": 2,
+    "newest_id": "1234567892",
+    "oldest_id": "1234567890"
+  }
+}
