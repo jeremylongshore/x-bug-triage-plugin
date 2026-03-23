@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.1.1] - 2026-03-23
+
+- ci(deps): bump actions/checkout from 4 to 6 (#8) (ac4809d)
+
+
 ## [v0.1.0] - 2026-03-23
 
 - feat: add missing governance files (fill-gaps) (2c3f384)
