@@ -1,0 +1,15 @@
+{
+  "data": {
+    "id": "12345",
+    "username": "TestProduct",
+    "name": "Test Product",
+    "verified": true,
+    "created_at": "2020-01-01T00:00:00.000Z",
+    "public_metrics": {
+      "followers_count": 50000,
+      "following_count": 100,
+      "tweet_count": 1000,
+      "listed_count": 200
+    }
+  }
+}

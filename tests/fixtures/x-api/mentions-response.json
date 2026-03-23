@@ -1,0 +1,49 @@
+{
+  "data": [
+    {
+      "id": "1234567890",
+      "text": "@TestProduct my messages keep disappearing in the chat. Getting Error 500 every time I try to send. Been happening since the update yesterday.",
+      "author_id": "987654321",
+      "conversation_id": "1234567890",
+      "created_at": "2026-03-23T10:00:00.000Z",
+      "in_reply_to_user_id": null,
+      "public_metrics": {
+        "like_count": 15,
+        "reply_count": 3,
+        "retweet_count": 2,
+        "quote_count": 1
+      },
+      "entities": {
+        "mentions": [{"username": "TestProduct"}]
+      },
+      "lang": "en"
+    },
+    {
+      "id": "1234567891",
+      "text": "@TestProduct same here! My chat is completely broken on iOS. Getting the same 500 error.",
+      "author_id": "111222333",
+      "conversation_id": "1234567890",
+      "created_at": "2026-03-23T10:30:00.000Z",
+      "in_reply_to_user_id": "987654321",
+      "referenced_tweets": [{"type": "replied_to", "id": "1234567890"}],
+      "public_metrics": {
+        "like_count": 5,
+        "reply_count": 1,
+        "retweet_count": 0,
+        "quote_count": 0
+      },
+      "lang": "en"
+    }
+  ],
+  "includes": {
+    "users": [
+      {"id": "987654321", "username": "bug_reporter", "name": "Bug Reporter"},
+      {"id": "111222333", "username": "me_too_user", "name": "Me Too"}
+    ]
+  },
+  "meta": {
+    "result_count": 2,
+    "newest_id": "1234567891",
+    "oldest_id": "1234567890"
+  }
+}
