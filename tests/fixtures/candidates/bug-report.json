@@ -1,0 +1,13 @@
+{
+  "id": "fixture_bug_001",
+  "text": "@TestProduct Error 500 in chat on iOS. Messages disappearing since yesterday's update. When I open the app and try to send a message it crashes. Version 3.2.1. Screenshot attached.",
+  "author_id": "reporter_001",
+  "conversation_id": "conv_001",
+  "created_at": "2026-03-23T10:00:00.000Z",
+  "in_reply_to_user_id": null,
+  "referenced_tweets": null,
+  "attachments": { "media_keys": ["media_001"] },
+  "public_metrics": { "like_count": 15, "reply_count": 5, "retweet_count": 3, "quote_count": 1 },
+  "entities": { "mentions": [{ "username": "TestProduct" }] },
+  "lang": "en"
+}
