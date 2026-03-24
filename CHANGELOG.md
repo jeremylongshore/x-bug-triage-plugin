@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.1.3] - 2026-03-24
+
+- fix: presentation polish for public showcase (cfbfc88)
+
+
 ## [v0.1.2] - 2026-03-23
 
 - chore(release): clean up CHANGELOG and add .gist-id (f6256cb)
