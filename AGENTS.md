@@ -5,6 +5,17 @@
 This project uses [beads](https://github.com/steveyegge/beads) for AI-friendly task tracking.
 Tasks are stored in `.beads/` and tracked via the `bd` CLI.
 
+## Subagents
+
+4 task-specific subagents in `agents/`, invoked by the orchestration skill:
+
+| Agent | Purpose |
+|-------|---------|
+| `bug-clusterer` | Parse, classify, redact PII, score reliability, cluster by family and signal layers |
+| `repo-scanner` | Scan repos for issue matches, recent commits, affected paths, deploy changes, evidence tiering |
+| `owner-router` | Recommend bug owners using 6-level routing precedence with staleness detection |
+| `triage-summarizer` | Format triage results for Slack with evidence tiering and severity indicators |
+
 ## Quick Reference
 
 ```bash

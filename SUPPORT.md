@@ -25,5 +25,5 @@
 
 ## Contact
 
-- **Email**: jeremy@jeremylongshore.com
+- **Email**: jeremy@intentsolutions.io
 - **GitHub**: [@jeremylongshore](https://github.com/jeremylongshore)

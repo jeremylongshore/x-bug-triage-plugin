@@ -49,7 +49,7 @@ bun run db:migrate
 1. Fork the repository
 2. Create a feature branch from `main`:
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b feature/epic-NN-description
    ```
 3. Make your changes
 4. Write or update tests
@@ -117,7 +117,7 @@ Use [Conventional Commits](https://www.conventionalcommits.org/):
 
 - **Questions**: [GitHub Discussions](https://github.com/jeremylongshore/x-bug-triage-plugin/discussions)
 - **Bugs**: [Issue Tracker](https://github.com/jeremylongshore/x-bug-triage-plugin/issues)
-- **Email**: jeremy@jeremylongshore.com
+- **Email**: jeremy@intentsolutions.io
 
 ## License
 

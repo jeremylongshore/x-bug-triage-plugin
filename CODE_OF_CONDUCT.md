@@ -44,7 +44,7 @@ an individual is officially representing the community in public spaces.
 ## Enforcement
 
 Instances of unacceptable behavior may be reported to the community leaders
-responsible for enforcement at **conduct@jeremylongshore.com**.
+responsible for enforcement at **conduct@intentsolutions.io**.
 
 All complaints will be reviewed and investigated promptly and fairly. All
 community leaders are obligated to respect the privacy and security of the
@@ -94,4 +94,4 @@ version 2.1, available at
 
 ---
 
-*Jeremy Longshore is committed to providing a welcoming and inclusive environment for all.*
+*Intent Solutions is committed to providing a welcoming and inclusive environment for all.*

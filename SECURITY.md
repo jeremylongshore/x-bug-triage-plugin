@@ -11,7 +11,7 @@
 
 **Please do NOT open public issues for security concerns.**
 
-Email **security@jeremylongshore.com** with:
+Email **security@intentsolutions.io** with:
 
 - Type of issue (e.g., buffer overflow, injection, privilege escalation)
 - Full paths of related source files
@@ -41,7 +41,7 @@ Email **security@jeremylongshore.com** with:
 
 ## Disclosure Process
 
-1. **Report** - You email the details to security@jeremylongshore.com
+1. **Report** - You email the details to security@intentsolutions.io
 2. **Triage** - We assess severity and impact
 3. **Fix** - We develop and test a patch
 4. **Notify** - We inform affected users
@@ -71,6 +71,6 @@ We appreciate responsible disclosure. Reporters who follow this policy will rece
 
 ## Contact
 
-- **Security reports**: security@jeremylongshore.com
-- **General inquiries**: jeremy@jeremylongshore.com
+- **Security reports**: security@intentsolutions.io
+- **General inquiries**: jeremy@intentsolutions.io
 - **Response time**: 24 hours for initial acknowledgment

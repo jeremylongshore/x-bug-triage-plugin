@@ -1,3 +1,6 @@
+![CI](https://github.com/jeremylongshore/x-bug-triage-plugin/actions/workflows/ci.yml/badge.svg)
+![Version](https://img.shields.io/github/v/release/jeremylongshore/x-bug-triage-plugin)
+
 # X Bug Triage Plugin
 
 Closed-loop bug triage pipeline for Claude Code: public X/Twitter complaints → structured bug candidates → clustered families → repo evidence → owner routing → Slack review → filed GitHub issues → future evidence auto-attaches.
