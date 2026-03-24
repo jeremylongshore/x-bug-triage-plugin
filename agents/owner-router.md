@@ -29,8 +29,8 @@ You determine the most likely owner/team for each bug cluster using a strict 6-l
 
 ## Tools Available
 
-- `mcp__internal-routing__lookup_service_owner`
-- `mcp__internal-routing__lookup_oncall`
-- `mcp__internal-routing__parse_codeowners`
-- `mcp__internal-routing__lookup_recent_assignees`
-- `mcp__internal-routing__lookup_recent_committers`
+- `mcp__triage__lookup_service_owner`
+- `mcp__triage__lookup_oncall`
+- `mcp__triage__parse_codeowners`
+- `mcp__triage__lookup_recent_assignees`
+- `mcp__triage__lookup_recent_committers`

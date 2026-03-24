@@ -28,7 +28,7 @@ You scan GitHub repos for evidence that supports or explains bug clusters.
 
 ## Tools Available
 
-- `mcp__repo-analysis__search_issues`
-- `mcp__repo-analysis__inspect_recent_commits`
-- `mcp__repo-analysis__inspect_code_paths`
-- `mcp__repo-analysis__check_recent_deploys`
+- `mcp__triage__search_issues`
+- `mcp__triage__inspect_recent_commits`
+- `mcp__triage__inspect_code_paths`
+- `mcp__triage__check_recent_deploys`
