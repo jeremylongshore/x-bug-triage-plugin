@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.4.4] - 2026-03-24
+
+- fix: replace mermaid diagram with text flow for GitHub Pages compatibility (5843c90)
+
+
 ## [v0.4.3] - 2026-03-24
 
 - chore: switch license from proprietary to MIT (4605c9c)
