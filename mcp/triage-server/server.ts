@@ -37,7 +37,7 @@ import type { BugCluster } from "../../lib/types";
 
 const server = new McpServer({
   name: "triage",
-  version: "0.1.0",
+  version: "0.3.0",
 });
 
 // ============================================================

@@ -1,36 +1,43 @@
 # Changelog
 
-## [v0.3.0] - 2026-03-24
-
-- feat: restructure SKILL.md with references/, DCI directives, and proper scaffolding (#12) (a9c9473)
-
-
-## [v0.2.0] - 2026-03-24
-
-- feat: add disallowedTools guardrails to all 4 subagents (#11) (c294416)
-
-
-## [v0.1.4] - 2026-03-24
-
-- Terminal-first UX, consolidate 5 MCP servers into 1, fix false claims (#10) (45671ed)
-
-
-## [v0.1.3] - 2026-03-24
-
-- fix: presentation polish for public showcase (cfbfc88)
-
-
-## [v0.1.2] - 2026-03-23
-
-- chore(release): clean up CHANGELOG and add .gist-id (f6256cb)
-
-
 All notable changes to x-bug-triage-plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v0.3.0] - 2026-03-24
+
+### Changed
+- SKILL.md restructured: DCI directives, references/ section, A-grade (96/100) (#12)
+
+### Fixed
+- Version sync: all 5 version files now agree on 0.3.0 (#13)
+- `.mcp.json` entry point: added missing `start` script to package.json (#13)
+- Description consistency: "Slack review" → "terminal review" in package.json and plugin.json (#13)
+- plugin.json: version bumped from 0.1.1, removed stale "slack" keyword, added homepage (#13)
+- CLAUDE.md test count: 278 → 282 (#13)
+
+## [v0.2.0] - 2026-03-24
+
+### Changed
+- feat: add disallowedTools guardrails to all 4 subagents (#11) (c294416)
+
+## [v0.1.4] - 2026-03-24
+
+### Changed
+- Terminal-first UX, consolidate 5 MCP servers into 1, fix false claims (#10) (45671ed)
+
+## [v0.1.3] - 2026-03-24
+
+### Fixed
+- Presentation polish for public showcase (cfbfc88)
+
+## [v0.1.2] - 2026-03-23
+
+### Changed
+- chore(release): clean up CHANGELOG and add .gist-id (f6256cb)
 
 ## [v0.1.1] - 2026-03-23
 
