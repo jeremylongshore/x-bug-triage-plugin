@@ -27,24 +27,9 @@ That's it. No Slack, no extra setup — just an X API token and `bun install`.
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    X[X API v2] --> I[Intake<br/>6 tools]
-    I --> N[Normalize<br/>parse, classify,<br/>redact, score]
-    N --> C[Cluster<br/>family-first,<br/>signature match]
-    C --> R[Repo Scan<br/>4 tools,<br/>Tier 1-4]
-    R --> O[Route<br/>5 tools,<br/>6-level]
-    O --> S[Severity<br/>escalation<br/>triggers]
-    S --> T[Terminal<br/>display]
-    T --> Rev[Review<br/>11 commands]
-    Rev --> D[Issue Draft<br/>3 tools,<br/>confirm gate]
-    D --> GH[GitHub<br/>Issues]
-    T -.->|optional| Sl[Slack<br/>peer plugin]
-
-    style X fill:#1da1f2,color:#fff
-    style T fill:#c4a5de,color:#000
-    style GH fill:#238636,color:#fff
-    style Sl fill:#4a154b,color:#fff,stroke-dasharray: 5 5
+```
+X API v2 → Intake (6) → Normalize → Cluster → Repo Scan (4) → Route (5) → Severity → Terminal → Review (11) → Issue Draft (3) → GitHub Issues
+                                                                                          ↳ Slack (optional)
 ```
 
 1 MCP server (`triage`) with 19 tools, orchestrated by a single SKILL.md playbook:
