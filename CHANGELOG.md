@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.3.2] - 2026-03-24
+
+- chore: add _config.yml for GitHub Pages minimal theme (8f251bf)
+
+
 ## [v0.3.1] - 2026-03-24
 
 - fix: scaffold audit — version sync, terminal-first descriptions, start script (#13) (f9d62b5)
