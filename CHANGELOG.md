@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.4.0] - 2026-03-24
+
+- feat: extract triage-summarizer process into per-agent skill (#17) (6f365c6)
+- feat: extract owner-router process into per-agent skill (#16) (546d852)
+- feat: extract repo-scanner process into per-agent skill (#15) (9ec5636)
+- feat: extract bug-clusterer process into per-agent skill (#14) (de7b086)
+
+
 ## [v0.3.2] - 2026-03-24
 
 - chore: add _config.yml for GitHub Pages minimal theme (8f251bf)
