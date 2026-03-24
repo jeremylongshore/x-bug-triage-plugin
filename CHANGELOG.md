@@ -1,5 +1,12 @@
 # Changelog
 
+All notable changes to x-bug-triage-plugin will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
 ## [v0.3.0] - 2026-03-24
 
 ### Changed
@@ -14,33 +21,25 @@
 - plugin.json: version bumped from 0.1.1, removed stale "slack" keyword, added homepage
 - CLAUDE.md test count: 278 → 282
 
-
 ## [v0.2.0] - 2026-03-24
 
+### Changed
 - feat: add disallowedTools guardrails to all 4 subagents (#11) (c294416)
-
 
 ## [v0.1.4] - 2026-03-24
 
+### Changed
 - Terminal-first UX, consolidate 5 MCP servers into 1, fix false claims (#10) (45671ed)
-
 
 ## [v0.1.3] - 2026-03-24
 
-- fix: presentation polish for public showcase (cfbfc88)
-
+### Fixed
+- Presentation polish for public showcase (cfbfc88)
 
 ## [v0.1.2] - 2026-03-23
 
+### Changed
 - chore(release): clean up CHANGELOG and add .gist-id (f6256cb)
-
-
-All notable changes to x-bug-triage-plugin will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
 
 ## [v0.1.1] - 2026-03-23
 
