@@ -1,6 +1,9 @@
 /**
- * X Intake server-specific types
+ * Consolidated triage server types
+ * Merged from x-intake, repo-analysis, internal-routing, issue-draft servers
  */
+
+// === X Intake Types ===
 
 export interface XApiConfig {
   bearerToken: string;
@@ -113,3 +116,73 @@ export const RATE_LIMITS: Record<string, { limit: number; window: number }> = {
   "tweets/search/all": { limit: 300, window: 900 },
   "tweets/:id/quote_tweets": { limit: 75, window: 900 },
 };
+
+// === Repo Analysis Types ===
+
+export interface RepoEvidence {
+  repo: string;
+  evidenceType: "issue_match" | "recent_commit" | "affected_path" | "recent_deploy" | "sibling_failure" | "external_dependency";
+  tier: 1 | 2 | 3 | 4;
+  title: string;
+  url?: string;
+  description: string;
+  timestamp?: string;
+  confidence: number;
+}
+
+export interface RepoScanResult {
+  repo: string;
+  evidence: RepoEvidence[];
+  scanned: boolean;
+  error?: string;
+}
+
+// === Internal Routing Types ===
+
+export interface RoutingResult {
+  level: number;
+  source: string;
+  team?: string;
+  assignee?: string;
+  confidence: number;
+  stale: boolean;
+  staleDays?: number;
+}
+
+export interface RoutingRecommendation {
+  cluster_id: string;
+  ranked_results: RoutingResult[];
+  top_recommendation: RoutingResult | null;
+  uncertainty: boolean;
+  uncertainty_reason?: string;
+  override_applied: boolean;
+}
+
+// === Issue Draft Types ===
+
+export interface IssueDraft {
+  cluster_id: string;
+  title: string;
+  labels: string[];
+  priority: string;
+  assignee_suggestion: string | null;
+  body: string;
+  repo: string;
+}
+
+export interface DuplicateCheck {
+  found: boolean;
+  existing_issue_url?: string;
+  existing_issue_number?: number;
+  similarity: number;
+}
+
+// === Review Command Types ===
+
+export interface ParsedCommand {
+  command: string;
+  clusterNumber?: number;
+  args?: string;
+  valid: boolean;
+  error?: string;
+}

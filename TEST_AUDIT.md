@@ -42,11 +42,7 @@ Assertions: 656
 | lib/classifier.ts | **lib/classifier.test.ts** (NEW) | 18 |
 | lib/signatures.ts | **lib/signatures.test.ts** (NEW) | 20 |
 | lib/overrides.ts | **lib/overrides.test.ts** (NEW) | 13 |
-| mcp/x-intake-server/lib.ts | lib.test.ts | 29 |
-| mcp/repo-analysis-server/lib.ts | lib.test.ts | 8 |
-| mcp/internal-routing-server/lib.ts | lib.test.ts | 7 |
-| mcp/slack-notification-server/lib.ts | lib.test.ts | 15 |
-| mcp/issue-draft-server/lib.ts | lib.test.ts | 6 |
+| mcp/triage-server/lib.ts | lib.test.ts | 65 |
 | (integration) | tests/scenario-validation.test.ts | 19 |
 
 ### Not Directly Tested (acceptable)

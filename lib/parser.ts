@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import type { BugCandidate, SourceType, ReporterCategory } from "./types";
-import type { XPost } from "../mcp/x-intake-server/types";
+import type { XPost } from "../mcp/triage-server/types";
 import { classify } from "./classifier";
 import { redactPii } from "./redactor";
 import { scoreReporter } from "./reporter-scorer";

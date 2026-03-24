@@ -3,34 +3,35 @@
 ## System Overview
 
 ```
-X API v2 → x-intake-server → Parser/Classifier/Redactor/Scorer
-                                       ↓
-                              Clusterer (family-first)
-                                       ↓
-                     repo-analysis-server → Evidence (Tier 1-4)
-                                       ↓
-                    internal-routing-server → Owner recommendation
-                                       ↓
-                  slack-notification-server → Formatted mrkdwn
-                                       ↓
-                   claude-code-slack-channel → Slack delivery (two-way)
-                                       ↓
-                              Human review (11 commands)
-                                       ↓
-                      issue-draft-server → GitHub Issues (with gate)
+X API v2 → triage-server (19 tools) → Parser/Classifier/Redactor/Scorer
+                                              ↓
+                                     Clusterer (family-first)
+                                              ↓
+                                     Repo evidence (Tier 1-4)
+                                              ↓
+                                     Owner recommendation (6-level)
+                                              ↓
+                                     Terminal display (markdown)
+                                              ↓
+                              ┌───── Human review (11 commands) ─────┐
+                              │                                       │
+                         Terminal input                    Slack input (optional)
+                              │                    (via claude-code-slack-channel)
+                              ↓
+                        Issue draft → confirm gate → GitHub Issues
 ```
 
 ## Component Responsibilities
 
-### MCP Servers (5)
+### MCP Server (1)
 
-| Server | Tools | Responsibility |
-|--------|-------|---------------|
-| x-intake | 6 | X API v2 ingestion with rate limiting, budgeting, degradation |
-| repo-analysis | 4+ | GitHub repo scanning for issues, commits, paths, deploys |
-| internal-routing | 5 | Ownership lookup with 6-level precedence cascade |
-| issue-draft | 3 | Draft generation, confirmation gate, duplicate check |
-| slack-notification | 5 | Slack mrkdwn formatting and command parsing |
+| Server | Tool Groups | Tools | Responsibility |
+|--------|------------|-------|---------------|
+| triage | X Intake | 6 | X API v2 ingestion with rate limiting, budgeting, degradation |
+| | Repo Analysis | 4 | GitHub repo scanning for issues, commits, paths, deploys |
+| | Internal Routing | 5 | Ownership lookup with 6-level precedence cascade |
+| | Issue Draft | 3 | Draft generation, confirmation gate, duplicate check |
+| | Review | 1 | Deterministic review command parsing |
 
 ### Shared Library (lib/)
 
@@ -55,11 +56,11 @@ X API v2 → x-intake-server → Parser/Classifier/Redactor/Scorer
 | bug-clusterer | Parse, classify, redact, score, cluster |
 | repo-scanner | Scan repos for evidence |
 | owner-router | Route ownership via precedence |
-| triage-summarizer | Format Slack output |
+| triage-summarizer | Format terminal output |
 
 ### Orchestration
 
-Single SKILL.md at `skills/x-bug-triage/SKILL.md` drives the 11-step workflow, referencing MCP tools by their registered names (e.g., `mcp__x-intake__fetch_mentions`).
+Single SKILL.md at `skills/x-bug-triage/SKILL.md` drives the 11-step workflow, referencing MCP tools by their registered names (e.g., `mcp__triage__fetch_mentions`).
 
 ## Data Flow
 
@@ -72,9 +73,9 @@ Single SKILL.md at `skills/x-bug-triage/SKILL.md` drives the 11-step workflow, r
 7. **Cluster**: Family-first → signature match → create/update cluster
 8. **Scan**: Top 3 repos per cluster → evidence tiered 1-4
 9. **Route**: 6-level ownership precedence → ranked assignees
-10. **Summarize**: Clusters → Slack mrkdwn
-11. **Deliver**: mrkdwn → bridge `reply` tool → Slack thread
-12. **Review**: Inbound commands → parsed → responses
+10. **Display**: Clusters → formatted markdown in terminal
+11. **Slack** (optional): If plugin available, also deliver to Slack channel
+12. **Review**: User commands from terminal (or Slack) → parsed → responses
 13. **File**: Draft → confirm gate → duplicate check → GitHub issue
 14. **Link**: Issue ↔ cluster bidirectional linking
 15. **Audit**: Every step logged (12 event types)
@@ -86,15 +87,13 @@ candidates, clusters, cluster_posts, overrides, suppression_rules, issue_links, 
 
 Schema-versioned migrations in `db/migrations/`.
 
-## Slack Integration
+## Slack Integration (Optional)
 
-The `claude-code-slack-channel` bridge is a **two-way channel**:
-- Users talk to Claude through Slack
-- Claude responds via the bridge's `reply` tool
-- This plugin's slack-notification-server only **formats** content
-- All Slack transport goes through the bridge
-
-The bridge is registered in the user's Claude Code MCP config, NOT in this plugin's `.mcp.json`.
+The `claude-code-slack-channel` plugin is a **separate peer plugin** for async team review:
+- If installed: triage results are displayed in terminal AND sent to Slack
+- If not installed: terminal-only workflow, fully functional
+- The plugin handles all Slack transport via its `reply` tool
+- Registered in the user's Claude Code MCP config, NOT in this plugin's `.mcp.json`
 
 ## Security Boundaries
 

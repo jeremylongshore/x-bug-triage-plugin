@@ -3,30 +3,23 @@
 ## Prerequisites
 
 - **Bun** >= 1.1 (`curl -fsSL https://bun.sh/install | bash`)
-- **Git** with submodule support
 - **X API credentials** (Pay-Per-Use or Basic tier)
 - **GitHub CLI** (`gh`) for issue filing
 - **Claude Code** with MCP support
 
 ## Initial Setup
 
-### 1. Clone and initialize
+### 1. Clone
 
 ```bash
 git clone https://github.com/jeremylongshore/x-bug-triage-plugin.git
 cd x-bug-triage-plugin
-git submodule update --init
 ```
 
 ### 2. Install dependencies
 
 ```bash
 bun install
-
-# Install Slack bridge dependencies (if using Slack integration)
-cd integrations/slack/claude-code-slack-channel
-bun install
-cd ../../..
 ```
 
 ### 3. Configure X API credentials
@@ -55,13 +48,28 @@ bun test            # Should pass all tests
 
 ## Running a Triage
 
-The triage workflow is driven by the SKILL.md orchestration. In Claude Code:
+In Claude Code terminal:
 
 ```
 /x-bug-triage @account --window 24h
 ```
 
-Or manually trigger individual MCP servers for testing.
+Results display directly. Interact with review commands:
+```
+> details 1
+> file 2
+> dismiss 3 noise
+> confirm file 2
+```
+
+## Optional: Slack for Team Review
+
+If you want async team review via Slack, install the [`claude-code-slack-channel`](https://github.com/jeremylongshore/claude-code-slack-channel) plugin separately:
+
+1. Clone and install `claude-code-slack-channel` per its README
+2. Register it in your Claude Code MCP settings (separate from this plugin)
+3. Configure Slack tokens in the bridge's `.env`
+4. Triage results will be delivered to both terminal and Slack
 
 ## Config Files
 
@@ -86,15 +94,6 @@ bun run db:reset      # Destroy and recreate database (DESTRUCTIVE)
 ```
 
 SQLite database lives at `data/triage.db`. Excluded from git.
-
-## Slack Bridge Setup
-
-The `claude-code-slack-channel` bridge is a git submodule. It is NOT registered in this plugin's `.mcp.json` — it must be registered in your Claude Code MCP config separately.
-
-1. Configure bridge's `.env` with Slack tokens (see bridge README)
-2. Register bridge in your Claude Code settings
-3. This plugin's `slack-notification-server` formats messages
-4. The bridge's `reply` tool handles Slack delivery
 
 ## Testing
 
@@ -129,9 +128,9 @@ bun run db:reset                # Nuclear option: destroy and recreate
 ```
 
 ### MCP server issues
-Each server can be tested independently:
+The single triage server can be tested directly:
 ```bash
-cd mcp/x-intake-server && bun run start
+cd mcp/triage-server && bun run start
 ```
 
 ### Beads

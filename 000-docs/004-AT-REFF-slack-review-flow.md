@@ -1,41 +1,55 @@
-# Slack Review Flow Reference — X Bug Triage Plugin
+# Optional Team Review Flow — X Bug Triage Plugin
 
-## Two-Way Bridge Architecture
+## Overview
 
-The `claude-code-slack-channel` bridge is a bidirectional channel:
+The primary interface is the Claude Code terminal. Users run `/x-bug-triage`, see results, and type review commands directly. No additional setup needed.
 
-```
-User types in Slack thread
-  → Bridge forwards message to Claude as inbound text
-  → Claude's SKILL.md orchestration parses the command
-  → Claude calls slack-notification-server to format response
-  → Claude calls bridge's `reply` tool with formatted mrkdwn
-  → User sees response in Slack thread
-```
+For **team workflows**, the optional `claude-code-slack-channel` plugin adds async Slack delivery so multiple reviewers can triage from a shared channel.
 
-**Key distinction:** The `slack-notification-server` MCP is a formatting-only layer. It produces Slack mrkdwn strings. It does NOT connect to Slack. All transport goes through the bridge.
-
-## Initial Summary Format
+## Terminal-First Flow (Default)
 
 ```
-🔍 X Bug Triage — Run {date} {time} UTC
+User runs /x-bug-triage @account
+  → Claude fetches, analyzes, clusters
+  → Results displayed as markdown in terminal
+  → User types commands: "details 1", "file 2", "dismiss 3 noise"
+  → Claude processes command, displays response
+  → "confirm file 2" gates all issue creation
+```
+
+## Optional Slack Flow (When Plugin Installed)
+
+```
+User runs /x-bug-triage @account
+  → Results displayed in terminal (same as above)
+  → ALSO sent to configured Slack channel via bridge's reply tool
+  → Team members can send commands from Slack
+  → Claude processes commands from both terminal and Slack
+```
+
+**Key distinction:** The triage server's `parse_review_command` tool handles command parsing. Claude formats all output directly as markdown. All Slack transport goes through the separate `claude-code-slack-channel` plugin.
+
+## Summary Format
+
+```
+X Bug Triage — Run {date} {time} UTC
    Account: @{account} · Window: last {window} · {count} posts ingested
 
-━━━ {n} clusters ({new} new, {existing} existing) ━━━
+--- {n} clusters ({new} new, {existing} existing) ---
 
 {severity_icon} {#} · {bug_signature}
      {report_count} reports · {severity} severity · {status_note}
      Owner: {team}
      Top evidence: {highest_tier_description} (Tier {n})
 
-━━━ Commands ━━━
+--- Commands ---
 details <#>  ·  file <#>  ·  dismiss <#>  ·  merge <#> <issue>
 escalate <#>  ·  monitor <#>  ·  snooze <#> <duration>
 split <#>  ·  reroute <#>  ·  full-report
 ```
 
-- Max 20 lines for ≤5 clusters
-- Top 5 by severity for 6+ clusters, then "N more — reply `full-report`"
+- Max 20 lines for <=5 clusters
+- Top 5 by severity for 6+ clusters, then "N more — type `full-report`"
 
 ## Detail View
 
@@ -58,7 +72,7 @@ Full cluster detail includes:
 | `file <#>` | Generate issue draft for review |
 | `dismiss <#> <reason>` | Suppress cluster with reason |
 | `merge <#> <issue>` | Link cluster to existing issue |
-| `escalate <#>` | Escalate to higher severity channel |
+| `escalate <#>` | Escalate to higher severity |
 | `monitor <#>` | Set cluster to monitoring state |
 | `snooze <#> <duration>` | Temporarily suppress (e.g., `snooze 3 24h`) |
 | `split <#>` | Split cluster into sub-clusters |
@@ -75,25 +89,18 @@ Full cluster detail includes:
 | Unrecognized command | "Available commands: ..." |
 | Already filed | "Cluster N was already filed as ISSUE-XXX. Want to update instead?" |
 
-## Thread State
-
-Each Slack thread tracks:
-- Which clusters have been acted on
-- Which clusters are still pending
-- Actions taken (with timestamps)
-- 24h idle → reminder of unresolved clusters
-
 ## Formatting Rules
 
-- Severity icons: 🔴 critical/high, 🟡 medium, 🟢 low
+- Severity icons: red_circle critical/high, yellow_circle medium, green_circle low
 - Initial summary: highest evidence tier only, team only
 - Detail view: all tiers, ranked assignees, full rationale
 - 3 representative posts per cluster (by quality, distinctness, recency)
 - >50 reports: show count + top 3 only
 - Tone: concise, factual, no hype, no exclamation marks
 
-## Degradation
+## Degradation (Slack Only)
 
+- Slack plugin not installed → terminal-only, not an error
 - Slack API error → retry 3x with backoff, then save to `data/reports/` as JSON
 - Channel not found → alert via fallback channel or log
 - Message too long → truncate to top 5 by severity, link to full report

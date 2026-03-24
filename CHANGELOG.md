@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v0.1.0] - 2026-03-23
 
 ### Added
-- Closed-loop bug triage plugin with 5 MCP servers
+- Closed-loop bug triage plugin with 1 MCP server (19 tools)
 - X/Twitter complaint intake with 6 MCP tools (EPIC-03)
 - Candidate parsing, classification, PII redaction, and scoring (EPIC-04)
 - Family-first clustering, signatures, lifecycle, and override memory (EPIC-05)
