@@ -1,13 +1,14 @@
 {
   "name": "x-bug-triage-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "Closed-loop bug triage: X complaints → clusters → repo evidence → owner routing → Slack review → filed issues",
+  "description": "Closed-loop bug triage: X complaints → clusters → repo evidence → owner routing → terminal review → filed issues",
   "author": "Jeremy Longshore <jeremy@intentsolutions.io>",
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.base.json",
     "test": "bun test",
+    "start": "bun mcp/triage-server/server.ts",
     "dev": "echo 'See 000-docs/010-OP-GUID-runbook-local-dev.md'",
     "db:migrate": "bun db/migrate.ts",
     "db:reset": "rm -f data/triage.db && bun db/migrate.ts"
