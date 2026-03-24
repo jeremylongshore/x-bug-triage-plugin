@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.3.1] - 2026-03-24
+
+- fix: scaffold audit — version sync, terminal-first descriptions, start script (#13) (f9d62b5)
+
+
 All notable changes to x-bug-triage-plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
