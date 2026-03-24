@@ -2,16 +2,20 @@
 
 ## What This Is
 
-Closed-loop bug triage plugin for Claude Code. Ingests public X/Twitter complaints, normalizes into structured bug candidates, clusters by family and signal layers, scans repos for evidence, routes to owners, delivers interactive Slack review, and files GitHub issues with human confirmation.
+Closed-loop bug triage plugin for Claude Code. Ingests public X/Twitter complaints, normalizes into structured bug candidates, clusters by family and signal layers, scans repos for evidence, routes to owners, displays interactive triage results in the terminal, and files GitHub issues with human confirmation.
 
 ## Architecture
 
-- **5 MCP servers** in `mcp/` — each has `server.ts` (MCP registration) + `lib.ts` (pure functions) + `types.ts`
+- **1 MCP server** (`triage`) in `mcp/triage-server/` — `server.ts` (19 tools) + `lib.ts` (pure functions) + `types.ts`
 - **Shared library** in `lib/` — types, db, config, audit, parser, classifier, clusterer, etc.
 - **1 orchestration skill** at `skills/x-bug-triage/SKILL.md` — 11-step workflow
 - **4 subagents** in `agents/` — bug-clusterer, repo-scanner, owner-router, triage-summarizer
 - **SQLite** at `data/triage.db` — 8 tables, schema-versioned migrations
-- **Slack bridge** via git submodule at `integrations/slack/claude-code-slack-channel/`
+- **Optional Slack delivery** via peer plugin `claude-code-slack-channel` (not bundled)
+
+## UX Model
+
+Terminal-first. Results display directly in Claude Code as markdown. Users interact with review commands (`details`, `file`, `dismiss`, etc.) by typing in the terminal. If the `claude-code-slack-channel` plugin is installed, results are also delivered to Slack for async team review.
 
 ## Build & Test
 
@@ -26,15 +30,24 @@ bun run db:reset           # Destroy and recreate database
 ## Key Conventions
 
 ### MCP Server Pattern
-Each server follows the `server.ts` + `lib.ts` split:
-- `server.ts` — MCP tool registration, input validation, calls lib functions
+Single server with `server.ts` + `lib.ts` split:
+- `server.ts` — MCP tool registration (19 tools), input validation, calls lib functions
 - `lib.ts` — Pure business logic, fully testable without MCP
 - `lib.test.ts` — Tests against lib.ts directly
 - `types.ts` — Server-specific types (imports shared types from `@lib/types`)
 
+Tool groups within the single server:
+- X Intake (6): `resolve_username`, `fetch_mentions`, `search_recent`, `search_archive`, `fetch_conversation`, `fetch_quote_tweets`
+- Repo Analysis (4): `search_issues`, `inspect_recent_commits`, `inspect_code_paths`, `check_recent_deploys`
+- Internal Routing (5): `lookup_service_owner`, `lookup_oncall`, `parse_codeowners`, `lookup_recent_assignees`, `lookup_recent_committers`
+- Issue Draft (3): `create_draft_issue`, `check_existing_issues`, `confirm_and_file`
+- Review (1): `parse_review_command`
+
+All tools use the `mcp__triage__` prefix.
+
 ### Module Resolution
 - `tsconfig.base.json` defines `@lib/*` → `./lib/*` path alias
-- Each MCP server extends `../../tsconfig.base.json`
+- MCP server extends `../../tsconfig.base.json`
 - Import shared code as `@lib/types`, `@lib/db`, `@lib/config`, etc.
 
 ### Config

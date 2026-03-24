@@ -93,7 +93,7 @@
 - **ML model training** — heuristic + LLM classification
 - **Historical backfill** — no bulk import
 - **Real-time alerting** — batch runs only
-- **Slack bridge submodule** — documented but not wired as git submodule (separate setup)
+- **Slack integration** — optional, via separate `claude-code-slack-channel` plugin (not bundled)
 - **Live X API integration** — MCP tools structured, actual API calls need credentials
 - **Live GitHub API integration** — evidence scanning structured, actual calls need access
 
@@ -109,6 +109,6 @@
 1. Wire X API credentials and test with live data
 2. Wire GitHub API credentials for repo scanning
 3. Implement severity computation engine using escalation trigger config
-4. Add Slack bridge submodule and test end-to-end review flow
+4. Install `claude-code-slack-channel` plugin and test end-to-end team review flow
 5. Implement thread state persistence for multi-session review
 6. Add historical accuracy learning from confirmed issues
