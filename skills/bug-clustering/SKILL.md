@@ -4,7 +4,7 @@ description: |
   Internal process for the bug-clusterer agent. Defines the step-by-step
   procedure for parsing, classifying, redacting, scoring, and clustering
   bug candidates from raw X/Twitter posts. Not user-invocable — loaded
-  by the agent via skills: ["bug-clustering"] frontmatter.
+  by the agent via its `skills: ["bug-clustering"]` frontmatter property.
 user-invocable: false
 version: 0.1.0
 author: Jeremy Longshore <jeremy@intentsolutions.io>
