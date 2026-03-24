@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.1.4] - 2026-03-24
+
+- Terminal-first UX, consolidate 5 MCP servers into 1, fix false claims (#10) (45671ed)
+
+
 ## [v0.1.3] - 2026-03-24
 
 - fix: presentation polish for public showcase (cfbfc88)
