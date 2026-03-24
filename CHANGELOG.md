@@ -11,15 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - SKILL.md restructured: DCI directives, references/ section, A-grade (96/100) (#12)
-- disallowedTools guardrails on all 4 subagents
-- Gemini PR review setup (standalone GCP project)
 
 ### Fixed
-- Version sync: all 5 version files now agree on 0.3.0
-- `.mcp.json` entry point: added missing `start` script to package.json
-- Description consistency: "Slack review" → "terminal review" in package.json and plugin.json
-- plugin.json: version bumped from 0.1.1, removed stale "slack" keyword, added homepage
-- CLAUDE.md test count: 278 → 282
+- Version sync: all 5 version files now agree on 0.3.0 (#13)
+- `.mcp.json` entry point: added missing `start` script to package.json (#13)
+- Description consistency: "Slack review" → "terminal review" in package.json and plugin.json (#13)
+- plugin.json: version bumped from 0.1.1, removed stale "slack" keyword, added homepage (#13)
+- CLAUDE.md test count: 278 → 282 (#13)
 
 ## [v0.2.0] - 2026-03-24
 
