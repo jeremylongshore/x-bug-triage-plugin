@@ -11,7 +11,7 @@ Closed-loop bug triage plugin for Claude Code. Ingests public X/Twitter complain
 ```bash
 bun install                        # Install dependencies
 bun run typecheck                  # TypeScript strict check (tsc --noEmit)
-bun test                           # Run all 282 tests
+bun test                           # Run all 278 tests
 bun test lib/parser.test.ts        # Run a single test file
 bun test --watch                   # Watch mode
 bun run db:migrate                 # Create/update SQLite database
