@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.3.0] - 2026-03-24
+
+- feat: restructure SKILL.md with references/, DCI directives, and proper scaffolding (#12) (a9c9473)
+
+
 ## [v0.2.0] - 2026-03-24
 
 - feat: add disallowedTools guardrails to all 4 subagents (#11) (c294416)
