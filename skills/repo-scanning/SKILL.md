@@ -3,8 +3,8 @@ name: repo-scanning
 description: |
   Internal process for the repo-scanner agent. Defines the step-by-step
   procedure for scanning GitHub repos for evidence that supports or explains
-  bug clusters. Not user-invocable — loaded by the agent via
-  skills: ["repo-scanning"] frontmatter.
+  bug clusters. Not user-invocable — loaded by the agent via its
+  `skills: ["repo-scanning"]` frontmatter property.
 user-invocable: false
 version: 0.1.0
 author: Jeremy Longshore <jeremy@intentsolutions.io>
@@ -67,9 +67,9 @@ For each piece of evidence, assign a tier:
 ### Step 7: Handle Degradation
 
 If a repo is inaccessible or an API call fails:
-- Log a degraded scan result with the error reason
-- Continue scanning remaining repos — never abort the whole scan
-- Include degradation warnings in output
+1. Log a degraded scan result with the error reason
+2. Continue scanning remaining repos — never abort the whole scan
+3. Include degradation warnings in output
 
 ## References
 
