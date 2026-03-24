@@ -4,7 +4,7 @@ description: |
   Internal process for the owner-router agent. Defines the step-by-step
   procedure for determining likely bug owners using strict 6-level routing
   precedence with staleness detection. Not user-invocable — loaded by the
-  agent via skills: ["owner-routing"] frontmatter.
+  agent via its `skills: ["owner-routing"]` frontmatter property.
 user-invocable: false
 version: 0.1.0
 author: Jeremy Longshore <jeremy@intentsolutions.io>
