@@ -3,8 +3,8 @@ name: triage-display
 description: |
   Internal process for the triage-summarizer agent. Defines the step-by-step
   procedure for formatting triage results as terminal markdown and parsing
-  review commands. Not user-invocable — loaded by the agent via
-  skills: ["triage-display"] frontmatter.
+  review commands. Not user-invocable — loaded by the agent via its
+  `skills: ["triage-display"]` frontmatter property.
 user-invocable: false
 version: 0.1.0
 author: Jeremy Longshore <jeremy@intentsolutions.io>
