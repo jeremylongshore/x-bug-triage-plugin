@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.2.0] - 2026-03-24
+
+- feat: add disallowedTools guardrails to all 4 subagents (#11) (c294416)
+
+
 ## [v0.1.4] - 2026-03-24
 
 - Terminal-first UX, consolidate 5 MCP servers into 1, fix false claims (#10) (45671ed)
