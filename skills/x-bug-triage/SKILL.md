@@ -53,6 +53,10 @@ Verify environment before starting:
 5. Hydrate conversation threads for posts with conversation_id: `mcp__triage__fetch_conversation`
 6. Fetch quote tweets for high-engagement posts: `mcp__triage__fetch_quote_tweets`
 
+After intake completes:
+1. Call `assessFreshness()` from `lib/freshness.ts` with the combined post set and the requested window boundaries. If `date_confidence` is `"low"` or `"medium"`, pass the `warning` string to the display step for rendering.
+2. Collect all `DegradationReport` objects from intake tool responses. Call `buildSourceStatusReport()` from `lib/source-status.ts` to aggregate into a `SourceStatusReport`. Pass to the display step for rendering between the header and cluster list.
+
 ### Step 2: Normalize
 
 For each ingested post:
@@ -149,6 +153,8 @@ Accept review commands from the user in the terminal. Parse via `mcp__triage__pa
 | `reroute <#>` | Change routing |
 | `full-report` | Display all clusters |
 | `confirm file <#>` | File via `mcp__triage__confirm_and_file` |
+
+After each command executes successfully, display the confirmation message from `formatActionConfirmation()` (in `mcp/triage-server/lib.ts`). This provides immediate user feedback for all review actions.
 
 Load override and memory policy when processing review commands:
 ```

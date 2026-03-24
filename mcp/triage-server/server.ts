@@ -32,8 +32,9 @@ import {
 } from "./lib";
 import type { XApiResponse, XPost, XUser, DegradationReport, IntakeResult, RepoEvidence } from "./types";
 import type { RoutingResult } from "./types";
-import { loadApprovedSearches } from "../../lib/config";
+import { loadApprovedSearches, loadCacheConfig } from "../../lib/config";
 import type { BugCluster } from "../../lib/types";
+import { cacheKey, getCached, setCached, type CacheConfig, DEFAULT_CACHE_CONFIG } from "../../lib/cache";
 
 const server = new McpServer({
   name: "triage",
@@ -148,6 +149,47 @@ async function xApiFetch(
 }
 
 // ============================================================
+// Cache-aware fetch wrapper
+// ============================================================
+
+function getActiveCacheConfig(): CacheConfig {
+  try {
+    const section = loadCacheConfig();
+    return {
+      enabled: section.enabled,
+      ttl_seconds: section.ttl_seconds,
+      directory: DEFAULT_CACHE_CONFIG.directory,
+    };
+  } catch {
+    return DEFAULT_CACHE_CONFIG;
+  }
+}
+
+async function cachedXApiFetch(
+  url: string,
+  endpoint: string,
+): Promise<{ response: XApiResponse; headers: Record<string, string>; degradation: DegradationReport | null }> {
+  const config = getActiveCacheConfig();
+  const key = cacheKey(url, endpoint);
+
+  // Check cache first
+  const cached = getCached<{ response: XApiResponse; headers: Record<string, string> }>(key, config);
+  if (cached) {
+    return { response: cached.response, headers: cached.headers, degradation: null };
+  }
+
+  // Cache miss — fetch from API
+  const result = await xApiFetch(url, endpoint);
+
+  // Only cache successful responses
+  if (!result.degradation) {
+    setCached(key, { response: result.response, headers: result.headers }, config);
+  }
+
+  return result;
+}
+
+// ============================================================
 // X Intake Tools (6)
 // ============================================================
 
@@ -157,7 +199,7 @@ server.tool(
   { username: z.string().describe("X username without @ prefix") },
   async ({ username }) => {
     const url = buildUserLookupUrl(username.replace(/^@/, ""));
-    const { response, degradation } = await xApiFetch(url, "users/by/username");
+    const { response, degradation } = await cachedXApiFetch(url, "users/by/username");
 
     if (degradation) {
       return { content: [{ type: "text" as const, text: JSON.stringify({ error: degradation }) }] };
@@ -188,7 +230,7 @@ server.tool(
       let url = buildMentionsUrl(user_id, since_id);
       if (nextToken) url += `&pagination_token=${nextToken}`;
 
-      const { response, degradation } = await xApiFetch(url, "users/:id/mentions");
+      const { response, degradation } = await cachedXApiFetch(url, "users/:id/mentions");
       if (degradation) {
         warnings.push(`Degraded: ${degradation.error}`);
         break;
@@ -233,7 +275,7 @@ server.tool(
       let url = buildSearchUrl(approved.query, "recent", since_id);
       if (nextToken) url += `&next_token=${nextToken}`;
 
-      const { response, degradation } = await xApiFetch(url, "tweets/search/recent");
+      const { response, degradation } = await cachedXApiFetch(url, "tweets/search/recent");
       if (degradation) {
         warnings.push(`Degraded: ${degradation.error}`);
         break;
@@ -274,7 +316,7 @@ server.tool(
       let url = buildSearchUrl(approved.query, "all", since_id);
       if (nextToken) url += `&next_token=${nextToken}`;
 
-      const { response, degradation } = await xApiFetch(url, "tweets/search/all");
+      const { response, degradation } = await cachedXApiFetch(url, "tweets/search/all");
       if (degradation) {
         warnings.push(`Degraded: ${degradation.error}`);
         break;
@@ -304,7 +346,7 @@ server.tool(
       let url = buildConversationSearchUrl(conversation_id);
       if (nextToken) url += `&next_token=${nextToken}`;
 
-      const { response, degradation } = await xApiFetch(url, "tweets/search/recent");
+      const { response, degradation } = await cachedXApiFetch(url, "tweets/search/recent");
       if (degradation) {
         warnings.push(`Degraded: ${degradation.error}`);
         break;
@@ -326,7 +368,7 @@ server.tool(
   { tweet_id: z.string().describe("X tweet ID to find quotes for") },
   async ({ tweet_id }) => {
     const url = buildQuoteTweetsUrl(tweet_id);
-    const { response, degradation } = await xApiFetch(url, "tweets/:id/quote_tweets");
+    const { response, degradation } = await cachedXApiFetch(url, "tweets/:id/quote_tweets");
 
     if (degradation) {
       return { content: [{ type: "text" as const, text: JSON.stringify({ posts: [], metadata: { endpoint: "tweets/:id/quote_tweets", count: 0, has_more: false, rate_limit_remaining: null, warnings: [degradation.error || "Degraded"], cost_estimate: 1 } }) }] };

@@ -8,5 +8,9 @@
   "suppression_rules": "indefinite",
   "issue_links": "indefinite",
   "audit_logs_minimum_days": 365,
-  "raw_unredacted_text": "never_stored"
+  "raw_unredacted_text": "never_stored",
+  "cache": {
+    "enabled": false,
+    "ttl_seconds": 3600
+  }
 }
