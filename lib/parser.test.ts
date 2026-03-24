@@ -13,7 +13,7 @@ import {
 import { classify } from "./classifier";
 import { redactPii } from "./redactor";
 import { scoreReporter } from "./reporter-scorer";
-import type { XPost } from "../mcp/x-intake-server/types";
+import type { XPost } from "../mcp/triage-server/types";
 import type { ApprovedAccountsConfig } from "./config";
 
 function makePost(overrides: Partial<XPost> = {}): XPost {

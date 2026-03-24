@@ -1,4 +1,4 @@
-import type { XPost } from "../mcp/x-intake-server/types";
+import type { XPost } from "../mcp/triage-server/types";
 
 export interface ReporterScores {
   quality: number;

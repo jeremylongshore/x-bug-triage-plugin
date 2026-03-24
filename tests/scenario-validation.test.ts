@@ -6,9 +6,9 @@ import { insertTriageRun, insertCandidate, insertCluster, insertClusterPost, get
 import { writeAuditEvent } from "../lib/audit";
 import { clusterCandidates, classificationToFamily, determineSubStatus } from "../lib/clusterer";
 import { parseCandidate } from "../lib/parser";
-import { parseReviewCommand } from "../mcp/slack-notification-server/lib";
+import { parseReviewCommand } from "../mcp/triage-server/lib";
 import type { BugCandidate, BugCluster, TriageRun } from "../lib/types";
-import type { XPost } from "../mcp/x-intake-server/types";
+import type { XPost } from "../mcp/triage-server/types";
 
 let db: Database;
 
