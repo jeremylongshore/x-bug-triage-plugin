@@ -8,7 +8,7 @@
   },
   "repository": "https://github.com/jeremylongshore/x-bug-triage-plugin",
   "homepage": "https://github.com/jeremylongshore/x-bug-triage-plugin",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "keywords": ["mcp", "triage", "x-api", "bug-tracking", "clustering"],
   "hooks": "./hooks/hooks.json"
 }

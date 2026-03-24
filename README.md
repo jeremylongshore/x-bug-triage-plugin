@@ -79,4 +79,4 @@ tests/fixtures/         # Mock API responses for deterministic testing
 
 ## License
 
-Intent Solutions Proprietary — see [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE).
