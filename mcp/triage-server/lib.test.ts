@@ -41,6 +41,7 @@ import {
   checkForDuplicates,
   // Review Command
   parseReviewCommand,
+  formatActionConfirmation,
 } from "./lib";
 import type { XPost, XApiResponse, ApprovedSearch, RepoEvidence, RoutingResult } from "./types";
 import type { BugCluster } from "../../lib/types";
@@ -578,5 +579,83 @@ describe("review-command", () => {
     const cmd = parseReviewCommand("unknown 1");
     expect(cmd.valid).toBe(false);
     expect(cmd.error).toContain("Available commands");
+  });
+});
+
+// ============================================================
+// Action Confirmation Tests
+// ============================================================
+
+describe("action confirmation", () => {
+  test("confirms dismiss with reason", () => {
+    const cmd = parseReviewCommand("dismiss 1 noise");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toBe('Cluster #1 dismissed (noise). Suppression rule created.');
+  });
+
+  test("confirms file command", () => {
+    const cmd = parseReviewCommand("file 2");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toContain("Draft issue created for cluster #2");
+  });
+
+  test("confirms confirm file command", () => {
+    const cmd = parseReviewCommand("confirm file 3");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toBe("Issue filed for cluster #3.");
+  });
+
+  test("confirms escalate command", () => {
+    const cmd = parseReviewCommand("escalate 1");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toContain("Cluster #1 escalated");
+  });
+
+  test("confirms monitor command", () => {
+    const cmd = parseReviewCommand("monitor 4");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toContain("Cluster #4 set to monitoring");
+  });
+
+  test("confirms snooze with duration", () => {
+    const cmd = parseReviewCommand("snooze 2 48h");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toBe("Cluster #2 snoozed for 48h.");
+  });
+
+  test("confirms merge with issue", () => {
+    const cmd = parseReviewCommand("merge 1 ISSUE-42");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toContain("merged with issue-42");
+  });
+
+  test("confirms full-report", () => {
+    const cmd = parseReviewCommand("full-report");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toContain("Displaying full report");
+  });
+
+  test("returns empty for invalid command", () => {
+    const cmd = parseReviewCommand("invalid");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toBe("");
+  });
+
+  test("confirms details command", () => {
+    const cmd = parseReviewCommand("details 5");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toContain("Showing details for cluster #5");
+  });
+
+  test("confirms split command", () => {
+    const cmd = parseReviewCommand("split 3");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toContain("Cluster #3 split");
+  });
+
+  test("confirms reroute command", () => {
+    const cmd = parseReviewCommand("reroute 2");
+    const msg = formatActionConfirmation(cmd);
+    expect(msg).toContain("Cluster #2 rerouted");
   });
 });

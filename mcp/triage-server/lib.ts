@@ -464,6 +464,31 @@ function calculateTitleSimilarity(a: string, b: string): number {
 }
 
 // ============================================================
+// Review Command — Action Confirmation
+// ============================================================
+
+const CONFIRMATION_TEMPLATES: Record<string, (clusterNumber?: number, args?: string) => string> = {
+  details: (n) => `Showing details for cluster #${n}.`,
+  file: (n) => `Draft issue created for cluster #${n}. Use "confirm file ${n}" to submit.`,
+  "confirm file": (n) => `Issue filed for cluster #${n}.`,
+  dismiss: (n, args) => `Cluster #${n} dismissed (${args || "no reason"}). Suppression rule created.`,
+  merge: (n, args) => `Cluster #${n} merged with ${args || "issue"}.`,
+  escalate: (n) => `Cluster #${n} escalated. Severity raised.`,
+  monitor: (n) => `Cluster #${n} set to monitoring.`,
+  snooze: (n, args) => `Cluster #${n} snoozed for ${args || "24h"}.`,
+  split: (n) => `Cluster #${n} split. Review new sub-clusters.`,
+  reroute: (n) => `Cluster #${n} rerouted.`,
+  "full-report": () => `Displaying full report for all clusters.`,
+};
+
+export function formatActionConfirmation(command: ParsedCommand): string {
+  if (!command.valid) return "";
+  const template = CONFIRMATION_TEMPLATES[command.command];
+  if (!template) return "";
+  return template(command.clusterNumber, command.args);
+}
+
+// ============================================================
 // Review Command Parsing
 // ============================================================
 

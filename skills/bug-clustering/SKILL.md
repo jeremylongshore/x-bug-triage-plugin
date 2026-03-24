@@ -28,6 +28,15 @@ For each XPost, produce a BugCandidate with all 33 fields using `lib/parser.ts`:
 - Extract urls, media_keys, language, conversation references
 - Determine source_type (mention, reply, quote_post, search_hit)
 
+### Step 1.5: Deduplicate
+
+Before classification, run content-similarity deduplication using `lib/dedupe.ts`:
+- Call `deduplicateCandidates()` with parsed candidates and the `candidate_dedup.hybrid_similarity_threshold` from `config/cluster-matching-thresholds.json` (default 0.70)
+- Uses char-trigram + token-Jaccard hybrid similarity
+- Does NOT remove posts — tags them as duplicate groups with a canonical post (highest engagement)
+- Only canonical posts and non-duplicates (`forward_ids`) proceed to classification
+- Log dedup stats: `"{n} posts ({m} unique, {k} duplicate groups)"`
+
 ### Step 2: Classify
 
 Run `lib/classifier.ts` on each candidate:

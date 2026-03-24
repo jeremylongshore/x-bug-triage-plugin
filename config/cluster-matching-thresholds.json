@@ -20,6 +20,10 @@
       "concentrated_time_burst": 0.25
     }
   },
+  "candidate_dedup": {
+    "enabled": true,
+    "hybrid_similarity_threshold": 0.70
+  },
   "anti_clustering": {
     "different_surface_penalty": -0.5,
     "contradictory_repro_penalty": -0.8,

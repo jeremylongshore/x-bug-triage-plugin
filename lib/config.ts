@@ -68,6 +68,11 @@ export interface SlackPreferencesConfig {
   fallback_output_dir: string;
 }
 
+export interface CacheConfigSection {
+  enabled: boolean;
+  ttl_seconds: number;
+}
+
 export interface RetentionPolicyConfig {
   candidates_redacted_days: number;
   candidates_hash_only_days: number;
@@ -78,6 +83,7 @@ export interface RetentionPolicyConfig {
   issue_links: string;
   audit_logs_minimum_days: number;
   raw_unredacted_text: string;
+  cache?: CacheConfigSection;
 }
 
 export interface SignalWeights {
@@ -146,6 +152,15 @@ export function loadRetentionPolicy(): RetentionPolicyConfig {
   const config = loadJson<RetentionPolicyConfig>("retention-policy.json");
   validateRequired(config as unknown as Record<string, unknown>, ["candidates_redacted_days", "audit_logs_minimum_days"], "retention-policy");
   return config;
+}
+
+export function loadCacheConfig(): CacheConfigSection {
+  try {
+    const retention = loadRetentionPolicy();
+    return retention.cache ?? { enabled: false, ttl_seconds: 3600 };
+  } catch {
+    return { enabled: false, ttl_seconds: 3600 };
+  }
 }
 
 export function loadClusterMatchingThresholds(): ClusterMatchingThresholdsConfig {
