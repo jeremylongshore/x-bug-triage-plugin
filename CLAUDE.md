@@ -27,6 +27,7 @@ Terminal-first Claude Code plugin. Results display as markdown in the terminal. 
 - **1 MCP server** (`triage`) at `mcp/triage-server/` — 19 tools in 5 groups, all prefixed `mcp__triage__`
 - **Shared library** at `lib/` — types, db, config, audit, parser, classifier, clusterer, signatures, redactor, scorer, overrides, retention
 - **Orchestration skill** at `skills/x-bug-triage/SKILL.md` — 11-step workflow
+- **4 per-agent skills** at `skills/` — bug-clustering, repo-scanning, owner-routing, triage-display (internal, not user-invocable)
 - **4 subagents** at `agents/` — bug-clusterer, repo-scanner, owner-router, triage-summarizer
 - **SQLite** at `data/triage.db` — 9 tables, schema-versioned migrations in `db/migrations/`
 - **8 config files** at `config/` — all operational parameters externalized

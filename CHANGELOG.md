@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Extract per-agent internal skills: each subagent now loads its own focused SKILL.md instead of the full orchestrator (#14, #15, #16, #17)
+  - `skills/bug-clustering/` — bug-clusterer process (7 steps, evidence-policy + schemas refs)
+  - `skills/repo-scanning/` — repo-scanner process (7 steps, evidence-policy ref)
+  - `skills/owner-routing/` — owner-router process (5 steps, routing-rules + escalation-rules refs)
+  - `skills/triage-display/` — triage-summarizer process (3 steps + formatting rules, review-memory-policy ref)
+
 ## [v0.3.0] - 2026-03-24
 
 ### Changed
