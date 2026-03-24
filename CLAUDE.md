@@ -1,65 +1,65 @@
-# CLAUDE.md — x-bug-triage-plugin
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## What This Is
 
 Closed-loop bug triage plugin for Claude Code. Ingests public X/Twitter complaints, normalizes into structured bug candidates, clusters by family and signal layers, scans repos for evidence, routes to owners, displays interactive triage results in the terminal, and files GitHub issues with human confirmation.
 
-## Architecture
-
-- **1 MCP server** (`triage`) in `mcp/triage-server/` — `server.ts` (19 tools) + `lib.ts` (pure functions) + `types.ts`
-- **Shared library** in `lib/` — types, db, config, audit, parser, classifier, clusterer, etc.
-- **1 orchestration skill** at `skills/x-bug-triage/SKILL.md` — 11-step workflow
-- **4 subagents** in `agents/` — bug-clusterer, repo-scanner, owner-router, triage-summarizer
-- **SQLite** at `data/triage.db` — 8 tables, schema-versioned migrations
-- **Optional Slack delivery** via peer plugin `claude-code-slack-channel` (not bundled)
-
-## UX Model
-
-Terminal-first. Results display directly in Claude Code as markdown. Users interact with review commands (`details`, `file`, `dismiss`, etc.) by typing in the terminal. If the `claude-code-slack-channel` plugin is installed, results are also delivered to Slack for async team review.
-
 ## Build & Test
 
 ```bash
-bun install                # Install dependencies
-bun run typecheck          # TypeScript strict check
-bun test                   # Run all tests
-bun run db:migrate         # Create/update SQLite database
-bun run db:reset           # Destroy and recreate database
+bun install                        # Install dependencies
+bun run typecheck                  # TypeScript strict check (tsc --noEmit)
+bun test                           # Run all 278 tests
+bun test lib/parser.test.ts        # Run a single test file
+bun test --watch                   # Watch mode
+bun run db:migrate                 # Create/update SQLite database
+bun run db:reset                   # Destroy and recreate database (DESTRUCTIVE)
 ```
+
+## Architecture
+
+Terminal-first Claude Code plugin. Results display as markdown in the terminal. Users type review commands directly. Optional Slack delivery via peer plugin `claude-code-slack-channel` (not bundled).
+
+### Component Map
+
+- **1 MCP server** (`triage`) at `mcp/triage-server/` — 19 tools in 5 groups, all prefixed `mcp__triage__`
+- **Shared library** at `lib/` — types, db, config, audit, parser, classifier, clusterer, signatures, redactor, scorer, overrides, retention
+- **Orchestration skill** at `skills/x-bug-triage/SKILL.md` — 11-step workflow
+- **4 subagents** at `agents/` — bug-clusterer, repo-scanner, owner-router, triage-summarizer
+- **SQLite** at `data/triage.db` — 9 tables, schema-versioned migrations in `db/migrations/`
+- **8 config files** at `config/` — all operational parameters externalized
+
+### Data Flow
+
+X API → intake (6 tools) → parser/classifier/redactor/scorer (lib/) → clusterer (lib/) → repo evidence (4 tools) → routing (5 tools) → terminal display → review commands (1 tool) → issue draft (3 tools) → GitHub issue
+
+### Cross-Module Dependencies
+
+The MCP server and shared library have a **bidirectional import relationship**:
+
+- `mcp/triage-server/lib.ts` imports from `../../lib/types` and `../../lib/config` (relative paths — the `@lib/*` alias is NOT available in MCP server code)
+- `lib/parser.ts` and `lib/reporter-scorer.ts` import `XPost` from `../mcp/triage-server/types`
+
+The `@lib/*` path alias (defined in `tsconfig.base.json`) only resolves within the base tsconfig's `include` scope (`lib/`, `db/`). The MCP server has its own `tsconfig.json` extending the base.
+
+### MCP Server Pattern
+
+Single server with `server.ts` + `lib.ts` split:
+- `server.ts` — tool registration, X API fetch infrastructure (auth, retry, rate limiting), calls lib functions
+- `lib.ts` — pure business logic, fully testable without MCP
+- `lib.test.ts` — tests against lib.ts directly
+- `types.ts` — server-specific types (XPost, RepoEvidence, RoutingResult, IssueDraft, ParsedCommand)
+
+### Test Fixtures
+
+Deterministic mock data at `tests/fixtures/` — X API responses, GitHub API responses, candidate objects, cluster objects. Used by `tests/scenario-validation.test.ts` (19 integration tests).
 
 ## Key Conventions
 
-### MCP Server Pattern
-Single server with `server.ts` + `lib.ts` split:
-- `server.ts` — MCP tool registration (19 tools), input validation, calls lib functions
-- `lib.ts` — Pure business logic, fully testable without MCP
-- `lib.test.ts` — Tests against lib.ts directly
-- `types.ts` — Server-specific types (imports shared types from `@lib/types`)
-
-Tool groups within the single server:
-- X Intake (6): `resolve_username`, `fetch_mentions`, `search_recent`, `search_archive`, `fetch_conversation`, `fetch_quote_tweets`
-- Repo Analysis (4): `search_issues`, `inspect_recent_commits`, `inspect_code_paths`, `check_recent_deploys`
-- Internal Routing (5): `lookup_service_owner`, `lookup_oncall`, `parse_codeowners`, `lookup_recent_assignees`, `lookup_recent_committers`
-- Issue Draft (3): `create_draft_issue`, `check_existing_issues`, `confirm_and_file`
-- Review (1): `parse_review_command`
-
-All tools use the `mcp__triage__` prefix.
-
-### Module Resolution
-- `tsconfig.base.json` defines `@lib/*` → `./lib/*` path alias
-- MCP server extends `../../tsconfig.base.json`
-- Import shared code as `@lib/types`, `@lib/db`, `@lib/config`, etc.
-
 ### Config
-8 JSON config files in `config/` — all operational parameters externalized. Never hardcode thresholds, keywords, or mappings.
-
-### Database
-SQLite via `bun:sqlite`. Schema in `db/schema.sql`. Migrations in `db/migrations/`. Run `bun run db:migrate` after schema changes.
-
-### Branching
-- Feature branches: `feature/epic-NN-description`
-- Commits: `feat(epic-NN): description`, `test(epic-NN): description`, `docs(epic-NN): description`
-- One PR per epic
+8 JSON config files in `config/`. Never hardcode thresholds, keywords, or mappings.
 
 ### Evidence Standards
 - Tier 1 (Exact) alone justifies clustering
@@ -82,8 +82,15 @@ SQLite via `bun:sqlite`. Schema in `db/schema.sql`. Migrations in `db/migrations
 - Replaced with `[REDACTED:type]`
 - Raw unredacted text is NEVER stored
 
+### Branching
+- Feature branches: `feature/epic-NN-description`
+- Commits: `feat(epic-NN): description`
+- One PR per epic
+
 ## Documentation
+
 All durable docs live in `000-docs/` following doc-filing conventions (NNN-CC-ABCD format).
 
 ## Task Tracking
+
 Uses Beads (`bd`) for post-compaction recovery. Workflow: `bd update <id> --status in_progress` → work → `bd close <id> --reason "evidence"` → `bd sync`.
