@@ -6,12 +6,13 @@ description: |
   signals. Trigger with "/x-bug-triage" or "triage X bugs for @account".
   Make sure to use this skill whenever triaging bugs from X/Twitter mentions.
 allowed-tools: "Read,Write,Edit,Glob,Grep,Bash(bun:*)"
-version: 0.2.0
+version: 0.3.0
 author: Jeremy Longshore <jeremy@intentsolutions.io>
 license: SEE LICENSE IN LICENSE
 user-invocable: true
 argument-hint: "<account> [--window 24h]"
 model: inherit
+effort: high
 compatible-with: claude-code
 tags: [triage, x-api, bug-tracking, social-monitoring]
 ---
@@ -22,7 +23,7 @@ Closed-loop bug triage from public X/Twitter complaints to clustered, evidence-b
 
 ## Overview
 
-Product teams learn about bugs from X/Twitter hours before internal monitoring catches them. This skill automates the pipeline: ingest complaints, classify and cluster them by bug family, scan repos for corroborating evidence, route to owners, and file issues — all with human confirmation gates. Runs in the terminal with optional Slack delivery for team review.
+Product teams learn about bugs from X/Twitter hours before internal monitoring catches them. This skill automates the pipeline: ingest complaints, classify and cluster them by bug family, scan repos for corroborating evidence, route to owners, and file issues — all with human confirmation gates. Results display directly in the terminal with optional Slack delivery for team review.
 
 ## Prerequisites
 
@@ -30,6 +31,16 @@ Product teams learn about bugs from X/Twitter hours before internal monitoring c
 - SQLite database initialized (`bun run db:migrate`)
 - `config/approved-accounts.json` and `config/approved-searches.json` populated
 - GitHub CLI (`gh`) for issue filing
+
+Verify environment before starting:
+
+```
+!test -f data/triage.db && echo "DB ready" || echo "Run: bun run db:migrate"
+```
+
+```
+!test -f config/approved-accounts.json && echo "Accounts configured" || echo "Missing: config/approved-accounts.json"
+```
 
 ## Instructions
 
@@ -73,11 +84,16 @@ For each cluster (top 3 repos per cluster):
 - `mcp__triage__inspect_code_paths` — Affected paths
 - `mcp__triage__check_recent_deploys` — Recent releases
 
-Assign evidence tiers (1-4) per [evidence-policy.md](evidence-policy.md).
+Assign evidence tiers (1-4) per [evidence-policy.md](references/evidence-policy.md).
+
+Load evidence tier definitions:
+```
+!cat ${CLAUDE_SKILL_DIR}/references/evidence-policy.md
+```
 
 ### Step 6: Route Ownership
 
-For each cluster, use strict 6-level precedence per [routing-rules.md](routing-rules.md):
+For each cluster, use strict 6-level precedence:
 1. `mcp__triage__lookup_service_owner`
 2. `mcp__triage__lookup_oncall`
 3. `mcp__triage__parse_codeowners`
@@ -87,6 +103,11 @@ For each cluster, use strict 6-level precedence per [routing-rules.md](routing-r
 
 Apply routing overrides from prior runs. Flag stale signals (>30 days).
 
+Load routing precedence rules:
+```
+!cat ${CLAUDE_SKILL_DIR}/references/routing-rules.md
+```
+
 ### Step 7: Evaluate Severity + Escalation
 
 Compute severity (low/medium/high/critical) based on:
@@ -94,7 +115,10 @@ Compute severity (low/medium/high/critical) based on:
 - Cross-surface failure, enterprise impact, reproducibility quality
 - Apply severity overrides from prior runs
 
-Check escalation triggers (6 from `config/severity-thresholds.json`).
+Load escalation trigger definitions:
+```
+!cat ${CLAUDE_SKILL_DIR}/references/escalation-rules.md
+```
 
 ### Step 8: Display Results
 
@@ -126,6 +150,11 @@ Accept review commands from the user in the terminal. Parse via `mcp__triage__pa
 | `full-report` | Display all clusters |
 | `confirm file <#>` | File via `mcp__triage__confirm_and_file` |
 
+Load override and memory policy when processing review commands:
+```
+!cat ${CLAUDE_SKILL_DIR}/references/review-memory-policy.md
+```
+
 ### Step 11: Persist Learning
 
 - All overrides stored in DB for future runs
@@ -139,8 +168,6 @@ Terminal markdown summary with severity-ranked clusters, evidence tiers, team as
 
 ## Examples
 
-### Basic triage run
-
 ```
 /x-bug-triage @AnthropicAI --window 24h
 ```
@@ -152,14 +179,6 @@ Produces cluster summary, then user interacts:
 > dismiss 3 noise
 > confirm file 2
 ```
-
-### Review a specific cluster
-
-```
-> details 1
-```
-
-Shows family, surface, feature area, evidence by tier, representative posts, routing recommendation.
 
 ## Error Handling
 
@@ -173,8 +192,10 @@ Shows family, surface, feature area, evidence by tier, representative posts, rou
 
 ## Resources
 
-- [schemas.md](schemas.md) — Data model reference
-- [routing-rules.md](routing-rules.md) — 6-level routing precedence
-- [escalation-rules.md](escalation-rules.md) — 6 escalation triggers
-- [evidence-policy.md](evidence-policy.md) — 4-tier evidence hierarchy
-- [review-memory-policy.md](review-memory-policy.md) — Override types and application order
+**References:** `${CLAUDE_SKILL_DIR}/references/`
+
+- [schemas.md](references/schemas.md) — Data model reference (BugCandidate, BugCluster, 9 DB tables)
+- [routing-rules.md](references/routing-rules.md) — 6-level routing precedence
+- [escalation-rules.md](references/escalation-rules.md) — 6 escalation triggers
+- [evidence-policy.md](references/evidence-policy.md) — 4-tier evidence hierarchy
+- [review-memory-policy.md](references/review-memory-policy.md) — Override types and application order
