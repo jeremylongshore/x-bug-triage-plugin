@@ -55,7 +55,11 @@ export function getCached<T>(key: string, config: CacheConfig): T | null {
     }
 
     return entry.data;
-  } catch {
+  } catch (err) {
+    // Non-fatal: log for debugging, return miss
+    if (process.env.DEBUG_CACHE) {
+      console.error(`[Cache] Read failed for ${key}:`, err);
+    }
     return null;
   }
 }
@@ -76,8 +80,11 @@ export function setCached<T>(key: string, data: T, config: CacheConfig): void {
     };
     const filePath = join(config.directory, `${key}.json`);
     writeFileSync(filePath, JSON.stringify(entry), "utf-8");
-  } catch {
-    // Cache write failure is non-fatal — fall through silently
+  } catch (err) {
+    // Non-fatal: log for debugging, skip write
+    if (process.env.DEBUG_CACHE) {
+      console.error(`[Cache] Write failed for ${key}:`, err);
+    }
   }
 }
 

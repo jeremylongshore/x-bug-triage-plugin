@@ -67,11 +67,19 @@ export function buildSourceStatusReport(
  */
 export function formatSourceStatusBlock(report: SourceStatusReport): string {
   const lines = ["--- Sources ---"];
-  for (const s of report.sources) {
+
+  // Dynamic padding based on longest values
+  const namePad = Math.max(14, ...report.sources.map((s) => s.name.length + 2));
+  const countStrs = report.sources.map((s) =>
+    s.post_count !== null ? `${s.post_count} posts` : s.error || "---",
+  );
+  const countPad = Math.max(8, ...countStrs.map((c) => c.length + 2));
+
+  for (let i = 0; i < report.sources.length; i++) {
+    const s = report.sources[i];
     const statusPad = s.status.padEnd(8);
-    const countStr = s.post_count !== null ? `${s.post_count} posts` : s.error || "---";
     const rlStr = s.rate_limit_display ? `(rate limit: ${s.rate_limit_display})` : "";
-    lines.push(`${s.name.padEnd(18)} ${statusPad}  ${countStr.padEnd(12)} ${rlStr}`);
+    lines.push(`${s.name.padEnd(namePad)} ${statusPad}  ${countStrs[i].padEnd(countPad)} ${rlStr}`);
   }
   return lines.join("\n");
 }

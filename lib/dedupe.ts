@@ -89,14 +89,19 @@ function tokenize(s: string): Set<string> {
   );
 }
 
+// Trigram catches character-level edits (typos, minor rewording).
+// Token Jaccard catches paraphrases where word order differs.
+// Token gets higher weight because bug reports vary more in phrasing than spelling.
+const TRIGRAM_WEIGHT = 0.4;
+const TOKEN_JACCARD_WEIGHT = 0.6;
+
 /**
  * Hybrid similarity combining trigram and token Jaccard.
- * Weights: 0.4 trigram + 0.6 token Jaccard.
  */
 export function hybridSimilarity(a: string, b: string): number {
   const trigram = charTrigramSimilarity(a, b);
   const jaccard = tokenJaccardSimilarity(a, b);
-  return 0.4 * trigram + 0.6 * jaccard;
+  return TRIGRAM_WEIGHT * trigram + TOKEN_JACCARD_WEIGHT * jaccard;
 }
 
 // ============================================================

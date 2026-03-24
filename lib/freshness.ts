@@ -4,6 +4,9 @@
  * time window, and produces a confidence band + optional warning.
  */
 
+const HIGH_CONFIDENCE_THRESHOLD = 0.7;
+const MEDIUM_CONFIDENCE_THRESHOLD = 0.3;
+
 export type DateConfidence = "high" | "medium" | "low";
 
 export interface FreshnessReport {
@@ -62,14 +65,14 @@ export function assessFreshness(
 }
 
 function classifyConfidence(ratio: number): DateConfidence {
-  if (ratio >= 0.7) return "high";
-  if (ratio >= 0.3) return "medium";
+  if (ratio >= HIGH_CONFIDENCE_THRESHOLD) return "high";
+  if (ratio >= MEDIUM_CONFIDENCE_THRESHOLD) return "medium";
   return "low";
 }
 
 function generateWarning(ratio: number, inWindow: number, total: number): string | null {
-  if (ratio >= 0.7) return null;
-  if (ratio >= 0.3) {
+  if (ratio >= HIGH_CONFIDENCE_THRESHOLD) return null;
+  if (ratio >= MEDIUM_CONFIDENCE_THRESHOLD) {
     return `Moderate freshness: ${inWindow}/${total} posts (${Math.round(ratio * 100)}%) fall within the requested window. Some results may be stale.`;
   }
   return `Low freshness: only ${inWindow}/${total} posts (${Math.round(ratio * 100)}%) fall within the requested window. Most results are outside the requested timeframe.`;
