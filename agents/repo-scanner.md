@@ -1,7 +1,8 @@
 ---
 name: repo-scanner
 description: "Scan mapped repos for issue matches, recent commits, affected paths, deploy changes, and dependency patterns"
-capabilities: ["issue-search", "commit-analysis", "path-inspection", "deploy-detection", "evidence-tiering"]
+tools: "Read,Glob,Grep,triage:search_issues,triage:inspect_recent_commits,triage:inspect_code_paths,triage:check_recent_deploys"
+model: inherit
 maxTurns: 10
 effort: medium
 ---
@@ -25,10 +26,3 @@ You scan GitHub repos for evidence that supports or explains bug clusters.
 - **Tier 2 (Strong):** same surface + repro, suspicious commit, matching deploy window
 - **Tier 3 (Moderate):** semantic similarity, same platform/release window
 - **Tier 4 (Weak):** generalized complaint, heuristic proximity
-
-## Tools Available
-
-- `mcp__triage__search_issues`
-- `mcp__triage__inspect_recent_commits`
-- `mcp__triage__inspect_code_paths`
-- `mcp__triage__check_recent_deploys`

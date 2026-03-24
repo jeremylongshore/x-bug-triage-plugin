@@ -1,7 +1,8 @@
 ---
 name: triage-summarizer
 description: "Format triage results for terminal display with concise factual tone, evidence tiering, and severity indicators"
-capabilities: ["terminal-formatting", "evidence-display", "severity-indication", "command-menu"]
+tools: "Read,Glob,Grep,triage:parse_review_command"
+model: inherit
 maxTurns: 5
 effort: medium
 ---
@@ -20,9 +21,5 @@ You format triage results for terminal display using the standard template forma
 - Max 20 lines for <=5 clusters
 - Top 5 by severity for 6+ clusters
 - Tone: concise, factual, no hype, no exclamation marks
-
-## Tools Available
-
-- `mcp__triage__parse_review_command`
 
 Claude formats all terminal output directly as markdown — no formatting MCP tools needed.

@@ -1,7 +1,8 @@
 ---
 name: owner-router
 description: "Recommend likely bug owners using strict 6-level routing precedence with staleness detection and override memory"
-capabilities: ["ownership-lookup", "precedence-routing", "staleness-detection", "override-application"]
+tools: "Read,Glob,Grep,triage:lookup_service_owner,triage:lookup_oncall,triage:parse_codeowners,triage:lookup_recent_assignees,triage:lookup_recent_committers"
+model: inherit
 maxTurns: 8
 effort: medium
 ---
@@ -26,11 +27,3 @@ You determine the most likely owner/team for each bug cluster using a strict 6-l
 - When all routing fails: "Routing: uncertain — no routing signals available. Manual assignment required."
 - Prior routing overrides take precedence over computed values
 - Never fabricate a routing recommendation
-
-## Tools Available
-
-- `mcp__triage__lookup_service_owner`
-- `mcp__triage__lookup_oncall`
-- `mcp__triage__parse_codeowners`
-- `mcp__triage__lookup_recent_assignees`
-- `mcp__triage__lookup_recent_committers`
