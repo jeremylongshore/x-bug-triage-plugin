@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.4.1] - 2026-03-24
+
+- fix: sync README/gist drift and correct test count (#18) (86a8e52)
+
+
 ## [v0.4.0] - 2026-03-24
 
 - feat: extract triage-summarizer process into per-agent skill (#17) (6f365c6)
