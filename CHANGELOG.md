@@ -1,9 +1,9 @@
 # Changelog
 
-## [v0.3.0] - 2026-03-23
+## [v0.3.0] - 2026-03-24
 
 ### Changed
-- SKILL.md restructured: DCI directives, references/ section, A-grade (96/100)
+- SKILL.md restructured: DCI directives, references/ section, A-grade (96/100) (#12)
 - disallowedTools guardrails on all 4 subagents
 - Gemini PR review setup (standalone GCP project)
 
@@ -13,6 +13,7 @@
 - Description consistency: "Slack review" → "terminal review" in package.json and plugin.json
 - plugin.json: version bumped from 0.1.1, removed stale "slack" keyword, added homepage
 - CLAUDE.md test count: 278 → 282
+
 
 ## [v0.2.0] - 2026-03-24
 
