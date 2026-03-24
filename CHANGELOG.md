@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.4.3] - 2026-03-24
+
+- chore: switch license from proprietary to MIT (4605c9c)
+
+
 ## [v0.4.2] - 2026-03-24
 
 - fix: sync README version to v0.4.1 (0563160)
