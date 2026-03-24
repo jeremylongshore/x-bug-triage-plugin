@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.5.0] - 2026-03-24
+
+- feat: 6 UX/data-quality enhancements from last30days-skill patterns (#19) (11e98e9)
+
+
 ## [v0.4.4] - 2026-03-24
 
 - fix: replace mermaid diagram with text flow for GitHub Pages compatibility (5843c90)
