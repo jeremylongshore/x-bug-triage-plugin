@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.5.1] - 2026-03-25
+
+- chore: update FUNDING.yml with GitHub Sponsors + Buy Me a Coffee (74a27e5)
+- chore: update FUNDING.yml with GitHub Sponsors + Buy Me a Coffee (85977aa)
+
+
 ## [v0.5.0] - 2026-03-24
 
 - feat: 6 UX/data-quality enhancements from last30days-skill patterns (#19) (11e98e9)
