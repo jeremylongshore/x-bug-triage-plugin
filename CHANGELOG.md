@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.5.2] - 2026-03-26
+
+- ci: add marketplace sync trigger on push (be04ab3)
+
+
 ## [v0.5.1] - 2026-03-25
 
 - chore: update FUNDING.yml with GitHub Sponsors + Buy Me a Coffee (74a27e5)
