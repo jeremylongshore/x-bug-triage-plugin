@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.6.0] - 2026-05-01
+
+- feat(skills): bring 5 SKILL.md files to marketplace tier compliance (#23) (32ef350)
+
+
 ## [v0.5.2] - 2026-03-26
 
 - ci: add marketplace sync trigger on push (be04ab3)
