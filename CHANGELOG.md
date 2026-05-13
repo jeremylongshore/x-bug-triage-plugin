@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.6.1] - 2026-05-13
+
+- chore(ci): remove obsolete gemini-review workflow (switching to Gemini app) (#24) (70cf40a)
+
+
 ## [v0.6.0] - 2026-05-01
 
 - feat(skills): bring 5 SKILL.md files to marketplace tier compliance (#23) (32ef350)
