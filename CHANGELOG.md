@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.6.2] - 2026-08-24
+
+- fix(agents): add kernel-floor metadata (#22) (eaa2857)
+
+
 ## [v0.6.1] - 2026-05-13
 
 - chore(ci): remove obsolete gemini-review workflow (switching to Gemini app) (#24) (70cf40a)
