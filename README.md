@@ -1,6 +1,8 @@
 ![CI](https://github.com/jeremylongshore/x-bug-triage-plugin/actions/workflows/ci.yml/badge.svg)
 ![Version](https://img.shields.io/github/v/release/jeremylongshore/x-bug-triage-plugin)
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U5S225PTME)
+
 # X Bug Triage Plugin v0.6.2
 
 Closed-loop bug triage pipeline that turns public X/Twitter complaints into filed GitHub issues with human confirmation at every step.
