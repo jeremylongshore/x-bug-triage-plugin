@@ -3,7 +3,7 @@
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U5S225PTME)
 
-# X Bug Triage Plugin v0.6.2
+# X Bug Triage Plugin v0.6.3
 
 Closed-loop bug triage pipeline that turns public X/Twitter complaints into filed GitHub issues with human confirmation at every step.
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.6.3] - 2026-08-25
+
+- chore(funding): add Ko-fi alongside the existing funding sources (6e46a74)
+- docs(readme): add the Ko-fi support badge (d021f12)
+
+
 ## [v0.6.2] - 2026-08-24
 
 - fix(agents): add kernel-floor metadata (#22) (eaa2857)
