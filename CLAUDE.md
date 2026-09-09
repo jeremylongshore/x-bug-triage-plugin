@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-Closed-loop bug triage plugin for Claude Code. Ingests public X/Twitter complaints, normalizes into structured bug candidates, clusters by family and signal layers, scans repos for evidence, routes to owners, displays interactive triage results in the terminal, and files GitHub issues with human confirmation.
+Public Claude Code prototype with live bounded X/Twitter intake plus local triage libraries and downstream MCP contract stubs. It does not currently scan GitHub, resolve owners, compute severity, deliver Slack messages, file issues, or run the full pipeline end to end.
 
 ## Build & Test
 
 ```bash
-bun install                        # Install dependencies
+bun install --frozen-lockfile      # Install locked dependencies
 bun run typecheck                  # TypeScript strict check (tsc --noEmit)
-bun test                           # Run all 278 tests
+bun test                           # Run the complete test suite
 bun test lib/parser.test.ts        # Run a single test file
 bun test --watch                   # Watch mode
 bun run db:migrate                 # Create/update SQLite database
@@ -20,21 +20,27 @@ bun run db:reset                   # Destroy and recreate database (DESTRUCTIVE)
 
 ## Architecture
 
-Terminal-first Claude Code plugin. Results display as markdown in the terminal. Users type review commands directly. Optional Slack delivery via peer plugin `claude-code-slack-channel` (not bundled).
+Terminal-first Claude Code plugin. Six MCP tools perform live authenticated X API v2 intake. The remaining MCP groups are prototype contracts: repo analysis produces synthetic records, routing returns no owner, review parsing validates syntax only, and filing returns a simulated receipt. The local libraries are not wired into a unified MCP runner.
 
 ### Component Map
 
 - **1 MCP server** (`triage`) at `mcp/triage-server/` — 19 tools in 5 groups, all prefixed `mcp__triage__`
 - **Shared library** at `lib/` — types, db, config, audit, parser, classifier, clusterer, signatures, redactor, scorer, overrides, retention
-- **Orchestration skill** at `skills/x-bug-triage/SKILL.md` — 11-step workflow
-- **4 per-agent skills** at `skills/` — bug-clustering, repo-scanning, owner-routing, triage-display (internal, not user-invocable)
+- **Primary skill** at `skills/x-bug-triage/SKILL.md` — bounded intake and prototype evaluation
+- **4 focused public skills** at `skills/` — bug-clustering, repo-scanning, owner-routing, triage-display
 - **4 subagents** at `agents/` — bug-clusterer, repo-scanner, owner-router, triage-summarizer
 - **SQLite** at `data/triage.db` — 9 tables, schema-versioned migrations in `db/migrations/`
 - **8 config files** at `config/` — all operational parameters externalized
 
 ### Data Flow
 
-X API → intake (6 tools) → parser/classifier/redactor/scorer (lib/) → clusterer (lib/) → repo evidence (4 tools) → routing (5 tools) → terminal display → review commands (1 tool) → issue draft (3 tools) → GitHub issue
+Implemented paths are separate today:
+
+- X API → six live MCP intake tools
+- fixtures or caller data → local parser/classifier/redactor/scorer/dedupe/cluster/database libraries
+- caller data → synthetic repo records → empty routing results → local draft text → simulated filing receipt
+
+Do not describe these paths as a closed loop. No checked-in runner connects live intake to the local libraries or downstream contract tools.
 
 ### Cross-Module Dependencies
 
@@ -48,6 +54,7 @@ The `@lib/*` path alias (defined in `tsconfig.base.json`) only resolves within t
 ### MCP Server Pattern
 
 Single server with `server.ts` + `lib.ts` split:
+
 - `server.ts` — tool registration, X API fetch infrastructure (auth, retry, rate limiting), calls lib functions
 - `lib.ts` — pure business logic, fully testable without MCP
 - `lib.test.ts` — tests against lib.ts directly
@@ -55,35 +62,41 @@ Single server with `server.ts` + `lib.ts` split:
 
 ### Test Fixtures
 
-Deterministic mock data at `tests/fixtures/` — X API responses, GitHub API responses, candidate objects, cluster objects. Used by `tests/scenario-validation.test.ts` (19 integration tests).
+Deterministic mock data at `tests/fixtures/` includes X API responses, synthetic GitHub-shaped responses, candidate objects, and cluster objects. Fixture presence does not imply a live GitHub integration.
 
 ## Key Conventions
 
 ### Config
+
 8 JSON config files in `config/`. Never hardcode thresholds, keywords, or mappings.
 
 ### Evidence Standards
+
 - Tier 1 (Exact) alone justifies clustering
 - Tier 2 (Strong) strengthens, never silently substitutes for Tier 1
 - Tier 3 (Moderate) supports grouping, not routing
 - Tier 4 (Weak) must never be presented as hard evidence
 
 ### Severity Rules
+
 - Independent from reporter prestige and cluster size
 - High consequence outranks high volume
 - High/critical must always expose rationale
 
 ### Reporter Reliability
+
 - Supporting signal only, not truth oracle
 - Low reliability never invalidates bug hypothesis alone
 - Never suppress security/privacy/data-loss/billing candidates by reliability alone
 
 ### PII
+
 - 6 types detected: emails, API keys, phones, account IDs, media flags, URL tokens
 - Replaced with `[REDACTED:type]`
 - Raw unredacted text is NEVER stored
 
 ### Branching
+
 - Feature branches: `feature/epic-NN-description`
 - Commits: `feat(epic-NN): description`
 - One PR per epic

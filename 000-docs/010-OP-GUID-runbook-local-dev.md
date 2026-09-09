@@ -4,7 +4,6 @@
 
 - **Bun** >= 1.1 (`curl -fsSL https://bun.sh/install | bash`)
 - **X API credentials** (Pay-Per-Use or Basic tier)
-- **GitHub CLI** (`gh`) for issue filing
 - **Claude Code** with MCP support
 
 ## Initial Setup
@@ -19,12 +18,13 @@ cd x-bug-triage-plugin
 ### 2. Install dependencies
 
 ```bash
-bun install
+bun install --frozen-lockfile
 ```
 
 ### 3. Configure X API credentials
 
 Create `~/.claude/channels/x-triage/.env`:
+
 ```bash
 mkdir -p ~/.claude/channels/x-triage
 cat > ~/.claude/channels/x-triage/.env << 'EOF'
@@ -46,7 +46,7 @@ bun run typecheck   # Should pass with no errors
 bun test            # Should pass all tests
 ```
 
-## Running a Triage
+## Running Live Intake
 
 In Claude Code terminal:
 
@@ -54,37 +54,31 @@ In Claude Code terminal:
 /x-bug-triage @account --window 24h
 ```
 
-Results display directly. Interact with review commands:
-```
-> details 1
-> file 2
-> dismiss 3 noise
-> confirm file 2
-```
+The skill can fetch a bounded public sample. It does not automatically run the local parser and clusterer, scan GitHub, resolve owners, execute review commands, or file an issue. Use its explicit offline-library or contract-demonstration modes when evaluating those separate surfaces.
 
-## Optional: Slack for Team Review
+## Slack Design Reference
 
-If you want async team review via Slack, install the [`claude-code-slack-channel`](https://github.com/jeremylongshore/claude-code-slack-channel) plugin separately:
+The separate [`claude-code-slack-channel`](https://github.com/jeremylongshore/claude-code-slack-channel) plugin can provide Slack tools, but x-bug-triage does not call it automatically. Installing both plugins is not a working integration by itself. The intended future setup is:
 
 1. Clone and install `claude-code-slack-channel` per its README
 2. Register it in your Claude Code MCP settings (separate from this plugin)
 3. Configure Slack tokens in the bridge's `.env`
-4. Triage results will be delivered to both terminal and Slack
+4. Implement an orchestration layer that explicitly passes approved, redacted results between them
 
 ## Config Files
 
-All operational parameters are in `config/`. Edit these to customize behavior:
+Configuration schemas are in `config/`. Only settings consumed by the current handler or local helper affect runtime behavior:
 
-| File | Purpose |
-|------|---------|
-| approved-accounts.json | Known accounts (internal, partner, tester) |
-| approved-searches.json | Pre-approved X search queries |
-| severity-thresholds.json | Escalation triggers and thresholds |
-| surface-repo-mapping.json | Product surface → GitHub repo mapping |
-| routing-source-priority.json | 6-level routing precedence |
-| slack-preferences.json | Slack display preferences |
-| retention-policy.json | Data retention periods |
-| cluster-matching-thresholds.json | Clustering signal weights |
+| File                             | Purpose                                    |
+| -------------------------------- | ------------------------------------------ |
+| approved-accounts.json           | Known accounts (internal, partner, tester) |
+| approved-searches.json           | Pre-approved X search queries              |
+| severity-thresholds.json         | Escalation triggers and thresholds         |
+| surface-repo-mapping.json        | Product surface → GitHub repo mapping      |
+| routing-source-priority.json     | 6-level routing precedence                 |
+| slack-preferences.json           | Slack display preferences                  |
+| retention-policy.json            | Data retention periods                     |
+| cluster-matching-thresholds.json | Clustering signal weights                  |
 
 ## Database Operations
 
@@ -104,6 +98,7 @@ bun test --watch                # Watch mode
 ```
 
 Test fixtures in `tests/fixtures/` provide deterministic mock data:
+
 - `x-api/` — Mock X API responses
 - `github-api/` — Mock GitHub API responses
 - `candidates/` — Test bug candidate objects
@@ -118,22 +113,27 @@ Test fixtures in `tests/fixtures/` provide deterministic mock data:
 ## Troubleshooting
 
 ### TypeScript errors
+
 ```bash
 bun run typecheck               # Check for type errors
 ```
 
 ### Database issues
+
 ```bash
 bun run db:reset                # Nuclear option: destroy and recreate
 ```
 
 ### MCP server issues
+
 The single triage server can be tested directly:
+
 ```bash
 cd mcp/triage-server && bun run start
 ```
 
 ### Beads
+
 ```bash
 bd doctor                       # Check beads health
 bd list --status in_progress    # See active tasks
