@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.6.4] - 2026-09-09
+
+- docs(skills): publish honest marketplace contracts (#26) (2e099ad)
+
+
 All notable changes to x-bug-triage-plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),

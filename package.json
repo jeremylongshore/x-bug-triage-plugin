@@ -1,6 +1,6 @@
 {
   "name": "x-bug-triage-plugin",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "private": true,
   "description": "Public X complaint intake and local triage prototype with explicitly labeled downstream contract stubs",
   "author": "Jeremy Longshore <jeremy@intentsolutions.io>",

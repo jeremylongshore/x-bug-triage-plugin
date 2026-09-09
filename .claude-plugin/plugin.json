@@ -1,6 +1,6 @@
 {
   "name": "x-bug-triage-plugin",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Public X complaint intake and local triage prototype with explicitly labeled downstream contract stubs",
   "author": {
     "name": "Jeremy Longshore",
@@ -9,6 +9,12 @@
   "repository": "https://github.com/jeremylongshore/x-bug-triage-plugin",
   "homepage": "https://github.com/jeremylongshore/x-bug-triage-plugin",
   "license": "MIT",
-  "keywords": ["mcp", "triage", "x-api", "bug-tracking", "clustering"],
+  "keywords": [
+    "mcp",
+    "triage",
+    "x-api",
+    "bug-tracking",
+    "clustering"
+  ],
   "hooks": "./hooks/hooks.json"
 }
