@@ -2,23 +2,28 @@
 
 **Date:** 2026-03-23
 **Version:** 0.1.0
-**Status:** MVP Complete
+**Status:** Historical design-complete report; not current runtime verification
 
-## What's Complete
+> This report is retained as a dated delivery record. Its checked boxes include schemas, pure functions, fixtures, and contract stubs—not necessarily live integrations. Current behavior is narrower: six X tools are live; local processing libraries are separate; GitHub, routing, severity, Slack, filing, review execution, and unified orchestration are not live. See `skills/x-bug-triage/references/runtime-contract.md`.
+
+## Historical Checklist
 
 ### Infrastructure
+
 - [x] Independent repo with proper git, branching, and commit conventions
 - [x] Plugin skeleton (`.claude-plugin/plugin.json`, `.mcp.json`, `hooks/hooks.json`)
 - [x] TypeScript strict mode + Bun tooling
 - [x] SQLite persistence with schema-versioned migrations
 
 ### Data Layer (8 tables)
+
 - [x] candidates (33 fields), clusters, cluster_posts, overrides (8 types)
 - [x] suppression_rules, issue_links, triage_runs, audit_log (12 event types)
 - [x] Typed CRUD helpers for all tables
 - [x] Config validation for all 8 config files
 
 ### MCP Servers (5)
+
 - [x] **x-intake** — 6 tools: resolve_username, fetch_mentions, search_recent, search_archive, fetch_conversation, fetch_quote_tweets
 - [x] **repo-analysis** — 4 tools: search_issues, inspect_recent_commits, inspect_code_paths, check_recent_deploys
 - [x] **internal-routing** — 5 tools: lookup_service_owner, lookup_oncall, parse_codeowners, lookup_recent_assignees, lookup_recent_committers
@@ -26,6 +31,7 @@
 - [x] **issue-draft** — 3 tools: create_draft_issue, confirm_and_file, check_existing_issues
 
 ### Processing Pipeline
+
 - [x] 33-field candidate normalization
 - [x] 12-category classification with sarcasm detection
 - [x] 6-type PII redaction
@@ -38,6 +44,7 @@
 - [x] Regression reopening detection
 
 ### Routing & Evidence
+
 - [x] Surface-to-repo mapping with top-3 cap
 - [x] 4-tier evidence hierarchy
 - [x] 6-level routing precedence with staleness detection
@@ -45,6 +52,7 @@
 - [x] Override application
 
 ### Review & Filing
+
 - [x] Slack mrkdwn formatting per blueprint template
 - [x] 11 interactive review commands with error handling
 - [x] Human confirmation gate (no auto-filing)
@@ -52,6 +60,7 @@
 - [x] Issue-family linking
 
 ### Operations
+
 - [x] Retention enforcement
 - [x] Backup script with checksum
 - [x] Cleanup script
@@ -59,6 +68,7 @@
 - [x] 10 durable documentation files
 
 ### Agents & Skills
+
 - [x] 4 subagent definitions (bug-clusterer, repo-scanner, owner-router, triage-summarizer)
 - [x] SKILL.md orchestration playbook (11-step workflow)
 - [x] 5 skill reference docs (schemas, routing-rules, escalation-rules, evidence-policy, review-memory-policy)
@@ -66,6 +76,7 @@
 ## Validation Evidence
 
 ### Scenarios Tested
+
 1. **Happy path:** Ingest → cluster → audit trail → command parsing
 2. **Partial failure:** Degraded intake still produces useful clusters
 3. **Rare severe:** Single data-loss report surfaces correctly despite 1 report
@@ -73,6 +84,7 @@
 5. **Regression reopened:** Resolved cluster + fresh complaints → regression_reopened + state reopened
 
 ### Test Coverage
+
 - 170+ tests across 8+ test files
 - All 12 classification categories
 - All 6 PII types
@@ -94,7 +106,7 @@
 - **Historical backfill** — no bulk import
 - **Real-time alerting** — batch runs only
 - **Slack integration** — optional, via separate `claude-code-slack-channel` plugin (not bundled)
-- **Live X API integration** — MCP tools structured, actual API calls need credentials
+- **Live X API verification** — handlers make real requests when the operator supplies a valid bearer token, but no credentialed production smoke test is recorded here
 - **Live GitHub API integration** — evidence scanning structured, actual calls need access
 
 ## Known Limitations
@@ -106,8 +118,8 @@
 
 ## Next Steps
 
-1. Wire X API credentials and test with live data
-2. Wire GitHub API credentials for repo scanning
+1. Record a bounded, credentialed X API smoke test without storing post content or secrets
+2. Implement authenticated GitHub handlers and prove returned URLs and SHAs
 3. Implement severity computation engine using escalation trigger config
 4. Install `claude-code-slack-channel` plugin and test end-to-end team review flow
 5. Implement thread state persistence for multi-session review

@@ -1,8 +1,11 @@
 # MVP Scope and Non-Goals — X Bug Triage Plugin
 
+> **Status: planning baseline, not an implemented-feature checklist.** Live X intake and separate local libraries exist. The current gaps include unified orchestration, real GitHub evidence and filing, owner providers, automatic severity, stateful review execution, and Slack transport.
+
 ## In Scope (MVP)
 
 ### Intake
+
 - Poll-based X API v2 ingestion (mentions, search, conversations, quotes)
 - 6 MCP tools for X interaction
 - Approved-query enforcement
@@ -10,6 +13,7 @@
 - Graceful degradation on all error paths
 
 ### Processing
+
 - 33-field candidate normalization
 - 12-category classification with sarcasm detection
 - 6-type PII redaction
@@ -17,6 +21,7 @@
 - Reporter category tagging (public/internal/partner/tester)
 
 ### Clustering
+
 - Family-first clustering (4 families)
 - Deterministic + semantic + temporal signal layers
 - Cross-session cluster continuity
@@ -25,6 +30,7 @@
 - Suppression rules
 
 ### Evidence & Routing
+
 - Surface-to-repo mapping (top 3 repos per cluster)
 - 4-tier evidence hierarchy
 - 6-level routing precedence
@@ -32,6 +38,7 @@
 - Explicit uncertainty when routing fails
 
 ### Review
+
 - Slack integration via claude-code-slack-channel bridge (two-way)
 - Formatted triage summaries
 - 11 interactive review commands
@@ -40,6 +47,7 @@
 - Fallback to local JSON on Slack failure
 
 ### Filing
+
 - GitHub Issues as draft target
 - Human confirmation gate (no auto-filing)
 - Duplicate detection before submission
@@ -47,6 +55,7 @@
 - Future evidence auto-attachment
 
 ### Operations
+
 - SQLite persistence (8 tables)
 - Schema-versioned migrations
 - 12-type audit logging

@@ -1,5 +1,7 @@
 # Architecture Reference — X Bug Triage Plugin
 
+> **Status: target architecture.** The diagram and full data flow below describe the intended system. Today only X intake makes live network requests; local processing libraries are separate, repository/routing/filing MCP handlers are stubs, and Slack delivery is absent. See `skills/x-bug-triage/references/runtime-contract.md` for current behavior.
+
 ## System Overview
 
 ```
@@ -25,42 +27,42 @@ X API v2 → triage-server (19 tools) → Parser/Classifier/Redactor/Scorer
 
 ### MCP Server (1)
 
-| Server | Tool Groups | Tools | Responsibility |
-|--------|------------|-------|---------------|
-| triage | X Intake | 6 | X API v2 ingestion with rate limiting, budgeting, degradation |
-| | Repo Analysis | 4 | GitHub repo scanning for issues, commits, paths, deploys |
-| | Internal Routing | 5 | Ownership lookup with 6-level precedence cascade |
-| | Issue Draft | 3 | Draft generation, confirmation gate, duplicate check |
-| | Review | 1 | Deterministic review command parsing |
+| Server | Tool Groups      | Tools | Responsibility                                                |
+| ------ | ---------------- | ----- | ------------------------------------------------------------- |
+| triage | X Intake         | 6     | X API v2 ingestion with rate limiting, budgeting, degradation |
+|        | Repo Analysis    | 4     | GitHub repo scanning for issues, commits, paths, deploys      |
+|        | Internal Routing | 5     | Ownership lookup with 6-level precedence cascade              |
+|        | Issue Draft      | 3     | Draft generation, confirmation gate, duplicate check          |
+|        | Review           | 1     | Deterministic review command parsing                          |
 
 ### Shared Library (lib/)
 
-| Module | Purpose |
-|--------|---------|
-| types.ts | All TypeScript interfaces and enums |
-| db.ts | SQLite connection, typed queries, transactions |
-| config.ts | JSON config loader with validation |
-| audit.ts | Audit log writer (12 event types) |
-| parser.ts | Raw post → BugCandidate normalization |
-| classifier.ts | 12-category classification with sarcasm detection |
-| redactor.ts | PII detection and replacement (6 types) |
-| reporter-scorer.ts | 4-dimension reliability scoring |
-| clusterer.ts | Family-first clustering engine |
-| signatures.ts | Bug signature generation and matching |
-| overrides.ts | Human override loading and application |
+| Module             | Purpose                                           |
+| ------------------ | ------------------------------------------------- |
+| types.ts           | All TypeScript interfaces and enums               |
+| db.ts              | SQLite connection, typed queries, transactions    |
+| config.ts          | JSON config loader with validation                |
+| audit.ts           | Audit log writer (12 event types)                 |
+| parser.ts          | Raw post → BugCandidate normalization             |
+| classifier.ts      | 12-category classification with sarcasm detection |
+| redactor.ts        | PII detection and replacement (6 types)           |
+| reporter-scorer.ts | 4-dimension reliability scoring                   |
+| clusterer.ts       | Family-first clustering engine                    |
+| signatures.ts      | Bug signature generation and matching             |
+| overrides.ts       | Human override loading and application            |
 
 ### Subagents (4)
 
-| Agent | Purpose |
-|-------|---------|
-| bug-clusterer | Parse, classify, redact, score, cluster |
-| repo-scanner | Scan repos for evidence |
-| owner-router | Route ownership via precedence |
-| triage-summarizer | Format terminal output |
+| Agent             | Purpose                                 |
+| ----------------- | --------------------------------------- |
+| bug-clusterer     | Parse, classify, redact, score, cluster |
+| repo-scanner      | Scan repos for evidence                 |
+| owner-router      | Route ownership via precedence          |
+| triage-summarizer | Format terminal output                  |
 
 ### Orchestration
 
-Single SKILL.md at `skills/x-bug-triage/SKILL.md` drives the 11-step workflow, referencing MCP tools by their registered names (e.g., `mcp__triage__fetch_mentions`).
+The target orchestration is documented in `skills/x-bug-triage/SKILL.md`. The current public skill deliberately separates live intake, offline library evaluation, and contract demonstrations because no checked-in runner drives the original 11-step flow.
 
 ## Data Flow
 
@@ -89,11 +91,7 @@ Schema-versioned migrations in `db/migrations/`.
 
 ## Slack Integration (Optional)
 
-The `claude-code-slack-channel` plugin is a **separate peer plugin** for async team review:
-- If installed: triage results are displayed in terminal AND sent to Slack
-- If not installed: terminal-only workflow, fully functional
-- The plugin handles all Slack transport via its `reply` tool
-- Registered in the user's Claude Code MCP config, NOT in this plugin's `.mcp.json`
+The `claude-code-slack-channel` plugin is a separate peer plugin. This document preserves the intended integration design, but x-bug-triage exposes no Slack tool and does not automatically call the peer plugin. Any Slack bridge requires a separately implemented orchestration layer.
 
 ## Security Boundaries
 

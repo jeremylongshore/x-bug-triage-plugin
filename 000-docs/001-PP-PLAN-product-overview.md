@@ -1,12 +1,14 @@
 # Product Overview — X Bug Triage Plugin
 
+> **Status: target design, not the current runtime.** The repository currently implements six live X intake tools and separate local heuristic/database libraries. GitHub scanning, owner lookup, severity automation, Slack delivery, issue filing, and end-to-end orchestration remain unimplemented. See `skills/x-bug-triage/references/runtime-contract.md` for the verified boundary.
+
 ## Problem
 
 Public X/Twitter complaints about software products are a noisy, unstructured signal. Engineering teams miss real bugs buried in sarcasm, duplicate reports, feature requests, and policy disagreements. Manual triage is slow, inconsistent, and doesn't scale.
 
 ## Solution
 
-A closed-loop triage pipeline that:
+The target is a closed-loop triage pipeline that:
 
 1. **Ingests** public X complaints via X API v2 (mentions, search, conversations, quotes)
 2. **Normalizes** raw posts into structured bug candidates with 33 fields

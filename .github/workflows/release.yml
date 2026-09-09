@@ -161,6 +161,14 @@ jobs:
             echo "Updated package.json to $VERSION_NUM"
           fi
 
+          # Claude Code plugin manifest
+          if [ -f ".claude-plugin/plugin.json" ]; then
+            tmp=$(mktemp)
+            jq --arg v "$VERSION_NUM" '.version = $v' .claude-plugin/plugin.json > "$tmp" && mv "$tmp" .claude-plugin/plugin.json
+            git add .claude-plugin/plugin.json
+            echo "Updated plugin.json to $VERSION_NUM"
+          fi
+
           # package-lock.json
           if [ -f "package-lock.json" ]; then
             tmp=$(mktemp)
@@ -258,10 +266,12 @@ jobs:
         run: |
           NEXT="${{ steps.version.outputs.next }}"
           echo "::notice::Dry run complete. Would have released $NEXT"
-          echo "## Dry Run Summary" >> "$GITHUB_STEP_SUMMARY"
-          echo "- **Version:** $NEXT" >> "$GITHUB_STEP_SUMMARY"
-          echo "- **Bump:** ${{ steps.bump.outputs.type }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "- **Previous:** ${{ steps.prev.outputs.tag }}" >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "## Dry Run Summary"
+            echo "- **Version:** $NEXT"
+            echo "- **Bump:** ${{ steps.bump.outputs.type }}"
+            echo "- **Previous:** ${{ steps.prev.outputs.tag }}"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Skip summary
         if: steps.check.outputs.needed != 'true'

@@ -1,10 +1,12 @@
 # Optional Team Review Flow — X Bug Triage Plugin
 
+> **Status: design reference only.** No current x-bug-triage tool sends Slack messages, loads terminal state, or executes review commands. Installing `claude-code-slack-channel` alone does not connect the two plugins; a separate orchestration layer is required.
+
 ## Overview
 
-The primary interface is the Claude Code terminal. Users run `/x-bug-triage`, see results, and type review commands directly. No additional setup needed.
+The intended primary interface is the Claude Code terminal. The current skill can format caller-supplied records and validate command syntax, but it does not run a stateful review session.
 
-For **team workflows**, the optional `claude-code-slack-channel` plugin adds async Slack delivery so multiple reviewers can triage from a shared channel.
+The flow below specifies a possible future integration with the separate `claude-code-slack-channel` plugin.
 
 ## Terminal-First Flow (Default)
 
@@ -54,6 +56,7 @@ split <#>  ·  reroute <#>  ·  full-report
 ## Detail View
 
 Full cluster detail includes:
+
 - Family, surface, feature area
 - Report count, confidence
 - Severity + rationale (always show why for high/critical)
@@ -66,28 +69,28 @@ Full cluster detail includes:
 
 ## 11 Review Commands
 
-| Command | Action |
-|---------|--------|
-| `details <#>` | Show full cluster detail |
-| `file <#>` | Generate issue draft for review |
-| `dismiss <#> <reason>` | Suppress cluster with reason |
-| `merge <#> <issue>` | Link cluster to existing issue |
-| `escalate <#>` | Escalate to higher severity |
-| `monitor <#>` | Set cluster to monitoring state |
-| `snooze <#> <duration>` | Temporarily suppress (e.g., `snooze 3 24h`) |
-| `split <#>` | Split cluster into sub-clusters |
-| `reroute <#>` | Change routing recommendation |
-| `full-report` | Show all clusters |
-| `confirm file <#>` | Actually file the issue (after reviewing draft) |
+| Command                 | Action                                          |
+| ----------------------- | ----------------------------------------------- |
+| `details <#>`           | Show full cluster detail                        |
+| `file <#>`              | Generate issue draft for review                 |
+| `dismiss <#> <reason>`  | Suppress cluster with reason                    |
+| `merge <#> <issue>`     | Link cluster to existing issue                  |
+| `escalate <#>`          | Escalate to higher severity                     |
+| `monitor <#>`           | Set cluster to monitoring state                 |
+| `snooze <#> <duration>` | Temporarily suppress (e.g., `snooze 3 24h`)     |
+| `split <#>`             | Split cluster into sub-clusters                 |
+| `reroute <#>`           | Change routing recommendation                   |
+| `full-report`           | Show all clusters                               |
+| `confirm file <#>`      | Actually file the issue (after reviewing draft) |
 
 ## Error Handling
 
-| Situation | Response |
-|-----------|----------|
-| Missing cluster number | "Which cluster?" |
-| Invalid number | "No cluster N. Available: 1, 2, 3" |
-| Unrecognized command | "Available commands: ..." |
-| Already filed | "Cluster N was already filed as ISSUE-XXX. Want to update instead?" |
+| Situation              | Response                                                            |
+| ---------------------- | ------------------------------------------------------------------- |
+| Missing cluster number | "Which cluster?"                                                    |
+| Invalid number         | "No cluster N. Available: 1, 2, 3"                                  |
+| Unrecognized command   | "Available commands: ..."                                           |
+| Already filed          | "Cluster N was already filed as ISSUE-XXX. Want to update instead?" |
 
 ## Formatting Rules
 
@@ -95,7 +98,7 @@ Full cluster detail includes:
 - Initial summary: highest evidence tier only, team only
 - Detail view: all tiers, ranked assignees, full rationale
 - 3 representative posts per cluster (by quality, distinctness, recency)
-- >50 reports: show count + top 3 only
+- > 50 reports: show count + top 3 only
 - Tone: concise, factual, no hype, no exclamation marks
 
 ## Degradation (Slack Only)

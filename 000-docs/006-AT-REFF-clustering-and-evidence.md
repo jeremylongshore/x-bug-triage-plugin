@@ -1,21 +1,24 @@
 # Clustering and Evidence Reference — X Bug Triage Plugin
 
+> **Status:** local parsing, fixed heuristic scoring, redaction, text deduplication, clustering, database, and override helpers exist and are tested. No MCP tool or checked-in command joins them to live intake. The broader semantic/evidence/severity model below includes target behavior; new runtime clusters currently start at `low` severity.
+
 ## Family-First Clustering
 
 Different families NEVER cluster together. Family is derived from classification:
 
-| Family | Classifications |
-|--------|----------------|
-| product_defect | bug_report, sarcastic_bug_report, account_problem, billing_problem |
-| model_quality_defect | model_quality_issue |
-| policy_mismatch | policy_or_expectation_mismatch |
-| ux_friction | ux_friction |
+| Family               | Classifications                                                    |
+| -------------------- | ------------------------------------------------------------------ |
+| product_defect       | bug_report, sarcastic_bug_report, account_problem, billing_problem |
+| model_quality_defect | model_quality_issue                                                |
+| policy_mismatch      | policy_or_expectation_mismatch                                     |
+| ux_friction          | ux_friction                                                        |
 
 Classifications that don't cluster: feature_request, user_error_or_confusion, praise, noise, needs_review.
 
 ## Signal Layers
 
 ### High-Weight Deterministic
+
 - Exact error string overlap
 - Linked URL match
 - Shared conversation_id
@@ -23,12 +26,14 @@ Classifications that don't cluster: feature_request, user_error_or_confusion, pr
 - Same known issue link
 
 ### Medium-Weight Semantic
+
 - Symptom phrase similarity
 - Feature-area match
 - Surface match
 - Repro-hint overlap
 
 ### Supporting Temporal
+
 - Same release/deploy/incident window
 - Concentrated time burst
 
@@ -56,36 +61,36 @@ open → filed → monitoring → fix_deployed → resolved → closed
 
 ## Sub-Statuses (4)
 
-| Sub-Status | Meaning |
-|------------|---------|
-| new_evidence | Fresh reports added to existing cluster |
-| late_tail | Reports arriving after fix deployed |
+| Sub-Status          | Meaning                                              |
+| ------------------- | ---------------------------------------------------- |
+| new_evidence        | Fresh reports added to existing cluster              |
+| late_tail           | Reports arriving after fix deployed                  |
 | regression_reopened | Resolved cluster receiving fresh matching complaints |
-| possible_duplicate | Cluster may overlap with another |
+| possible_duplicate  | Cluster may overlap with another                     |
 
 ## Evidence Hierarchy (4 tiers)
 
-| Tier | Name | Examples | Use |
-|------|------|----------|-----|
-| 1 | Exact | Error string match, known issue match, explicit repro, screenshot reuse, same thread | Justifies clustering alone |
-| 2 | Strong contextual | Same conversation tree, same surface + repro, suspicious commit, matching deploy window | Strengthens, never substitutes Tier 1 |
-| 3 | Moderate | Semantic symptom similarity, similar language, same platform/release window | Supports grouping, not routing |
-| 4 | Weak | Generalized complaint language, high-level feature mention, heuristic proximity | Never presented as hard evidence |
+| Tier | Name              | Examples                                                                                | Use                                   |
+| ---- | ----------------- | --------------------------------------------------------------------------------------- | ------------------------------------- |
+| 1    | Exact             | Error string match, known issue match, explicit repro, screenshot reuse, same thread    | Justifies clustering alone            |
+| 2    | Strong contextual | Same conversation tree, same surface + repro, suspicious commit, matching deploy window | Strengthens, never substitutes Tier 1 |
+| 3    | Moderate          | Semantic symptom similarity, similar language, same platform/release window             | Supports grouping, not routing        |
+| 4    | Weak              | Generalized complaint language, high-level feature mention, heuristic proximity         | Never presented as hard evidence      |
 
 ## Override Memory (8 types)
 
-All overrides stored in `overrides` table, loaded at run start:
+The schema and local helpers support the override types below. The review-command MCP parser does not persist them, and there is no unified run start that loads them automatically:
 
-| Type | Effect |
-|------|--------|
-| cluster_merge | Combine two clusters |
-| cluster_split | Divide a cluster |
-| noise_suppression | Suppress matching pattern |
-| routing_override | Change owner recommendation |
-| issue_family_link | Link cluster to issue family |
-| severity_override | Change severity assessment |
-| label_correction | Fix classification/family |
-| snooze | Temporary suppression with expiry |
+| Type              | Effect                            |
+| ----------------- | --------------------------------- |
+| cluster_merge     | Combine two clusters              |
+| cluster_split     | Divide a cluster                  |
+| noise_suppression | Suppress matching pattern         |
+| routing_override  | Change owner recommendation       |
+| issue_family_link | Link cluster to issue family      |
+| severity_override | Change severity assessment        |
+| label_correction  | Fix classification/family         |
+| snooze            | Temporary suppression with expiry |
 
 ## Severity Model
 
