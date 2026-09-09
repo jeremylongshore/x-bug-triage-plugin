@@ -3,7 +3,7 @@
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U5S225PTME)
 
-# X Bug Triage Plugin v0.6.4
+# X Bug Triage Plugin v0.6.5
 
 Public prototype for collecting bounded X/Twitter complaint samples and evaluating local triage heuristics and downstream contracts. Live X intake is implemented; GitHub scanning, owner lookup, issue filing, severity automation, Slack delivery, and end-to-end orchestration are not.
 

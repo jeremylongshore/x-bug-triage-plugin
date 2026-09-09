@@ -1,6 +1,6 @@
 {
   "name": "x-bug-triage-plugin",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "Public X complaint intake and local triage prototype with explicitly labeled downstream contract stubs",
   "author": {
     "name": "Jeremy Longshore",

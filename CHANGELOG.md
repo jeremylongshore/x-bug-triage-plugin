@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.6.5] - 2026-09-09
+
+- fix(pages): use bundled minimal theme (#27) (337d0e9)
+
+
 ## [v0.6.4] - 2026-09-09
 
 - docs(skills): publish honest marketplace contracts (#26) (2e099ad)
