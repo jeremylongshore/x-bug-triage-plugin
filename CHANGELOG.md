@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.6.6] - 2026-09-24
+
+- ci(deps): bump actions/checkout from 6 to 7 (#25) (c591e8e)
+
+
 ## [v0.6.5] - 2026-09-09
 
 - fix(pages): use bundled minimal theme (#27) (337d0e9)
