@@ -5,6 +5,12 @@
 
 # X Bug Triage Plugin v0.6.7
 
+<!-- intent-select-partner:start -->
+<p><a href="https://intentsolutions.io/"><img src="https://raw.githubusercontent.com/intent-solutions-io/.github/b82af5d3e7951d85e39ea9e65cc24ee8278722a7/assets/brand/claude-select-partner.svg" alt="Intent Solutions: Claude Partner Network Select Services Partner" width="300" height="95" /></a></p>
+
+Intent Solutions is a Claude Partner Network Select Services Partner.
+<!-- intent-select-partner:end -->
+
 Public prototype for collecting bounded X/Twitter complaint samples and evaluating local triage heuristics and downstream contracts. Live X intake is implemented; GitHub scanning, owner lookup, issue filing, severity automation, Slack delivery, and end-to-end orchestration are not.
 
 ## Quick Start
