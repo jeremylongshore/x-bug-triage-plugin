@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.6.8] - 2026-10-14
+
+- docs: display official Intent Solutions Select partner badge (#29) (b311981)
+
+
 ## [v0.6.7] - 2026-09-25
 
 - chore(deps): move to TypeScript 6 and drop the deprecated baseUrl (#28) (b8efe8e)
